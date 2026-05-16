@@ -971,7 +971,9 @@ function renderMonthly() {
       <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.grabTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal)}</td>
-
+      <td style="padding:7px 12px;text-align:center;">
+        <button onclick="deleteDailyRecord('${r.date}')" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit;">ลบ</button>
+      </td>
     </tr>`;
   }).join('');
 
