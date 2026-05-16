@@ -774,12 +774,23 @@ function saveDailyRecord() {
     items: items.map(i=>({name:i.name,qty:i.qty,price:i.price,total:i.total,channel:i.channel,payment:i.payment}))
   };
 
-  // Load existing history
+  // Save to localStorage
   let historyData = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
   historyData[dateKey] = record;
   localStorage.setItem('dailyHistory', JSON.stringify(historyData));
 
-  toast('บันทึกวันที่ ' + dateKey + ' เรียบร้อย');
+  // Sync to Google Sheets via JSONP
+  toast('กำลังบันทึก...');
+  const saveData = encodeURIComponent(JSON.stringify({
+    action: 'saveDailyRecord', date: dateKey, record
+  }));
+  jsonpRequest(SCRIPT_URL + '?payload=' + saveData, function(res) {
+    if (res && res.success) {
+      toast('บันทึกวันที่ ' + dateKey + ' เรียบร้อย');
+    } else {
+      toast('บันทึก local แล้ว (sync ล้มเหลว)');
+    }
+  });
 }
 
 
