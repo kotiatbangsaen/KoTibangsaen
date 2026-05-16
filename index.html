@@ -783,7 +783,17 @@ function saveDailyRecord() {
 
 
 function showMonthly() {
-  const historyData = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
+  const rawHist = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
+  const historyData = {};
+  Object.keys(rawHist).forEach(k => {
+    const d = new Date(k);
+    if (!isNaN(d.getTime())) {
+      const normalized = d.toISOString().slice(0,10);
+      const rec = rawHist[k]; rec.date = normalized;
+      historyData[normalized] = rec;
+    } else { historyData[k] = rawHist[k]; }
+  });
+  localStorage.setItem('dailyHistory', JSON.stringify(historyData));
   const months = [...new Set(Object.keys(historyData).map(d=>d.slice(0,7)))].sort().reverse();
 
   const sel = document.getElementById('monthly-month-sel');
@@ -810,7 +820,14 @@ function showMonthly() {
   .then(res => {
     if (res.success && res.history && Object.keys(res.history).length) {
       let localData = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
-      const merged = Object.assign({}, localData, res.history);
+      const normalized = {};
+      Object.keys(res.history).forEach(k => {
+        const d = new Date(k);
+        const key = !isNaN(d.getTime()) ? d.toISOString().slice(0,10) : k;
+        const rec = res.history[k]; rec.date = key;
+        normalized[key] = rec;
+      });
+      const merged = Object.assign({}, localData, normalized);
       localStorage.setItem('dailyHistory', JSON.stringify(merged));
       const allMonths = [...new Set(Object.keys(merged).map(d=>d.slice(0,7)))].sort().reverse();
       sel.innerHTML = allMonths.map(m => {
@@ -836,9 +853,24 @@ function closeMonthly() {
 function renderMonthly() {
   const sel = document.getElementById('monthly-month-sel');
   const month = sel.value;
-  const historyData = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
+  const raw = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
+  // Normalize keys - convert any Date string keys to YYYY-MM-DD format
+  const historyData = {};
+  Object.keys(raw).forEach(k => {
+    const d = new Date(k);
+    if (!isNaN(d.getTime())) {
+      const normalized = d.toISOString().slice(0,10);
+      const rec = raw[k];
+      rec.date = normalized;
+      historyData[normalized] = rec;
+    } else {
+      historyData[k] = raw[k];
+    }
+  });
+  // Save normalized back
+  localStorage.setItem('dailyHistory', JSON.stringify(historyData));
 
-  const records = Object.values(historyData).filter(r=>r.date.startsWith(month)).sort((a,b)=>a.date.localeCompare(b.date));
+  const records = Object.values(historyData).filter(r=>r.date && r.date.startsWith(month)).sort((a,b)=>a.date.localeCompare(b.date));
   if (!records.length) { toast('ไม่มีข้อมูลเดือนนี้'); return; }
 
   const [y,mo] = month.split('-');
