@@ -783,12 +783,49 @@ function saveDailyRecord() {
 
 
 function showMonthly() {
-  // Populate month selector
   const historyData = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
   const months = [...new Set(Object.keys(historyData).map(d=>d.slice(0,7)))].sort().reverse();
 
-  if (!months.length) { toast('ยังไม่มีข้อมูลที่บันทึกไว้'); return; }
+  const sel = document.getElementById('monthly-month-sel');
+  if (months.length) {
+    sel.innerHTML = months.map(m => {
+      const [y,mo] = m.split('-');
+      const thMonth = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][parseInt(mo)];
+      return `<option value="${m}">${thMonth} ${parseInt(y)+543}</option>`;
+    }).join('');
+  }
 
+  document.getElementById('monthly-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+
+  if (!months.length) {
+    toast('กำลังโหลดจาก Google Sheets...');
+  } else {
+    renderMonthly();
+  }
+
+  // Sync from Google Sheets in background
+  fetch(SCRIPT_URL + '?action=getHistory')
+  .then(r => r.json())
+  .then(res => {
+    if (res.success && res.history && Object.keys(res.history).length) {
+      let localData = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
+      const merged = Object.assign({}, localData, res.history);
+      localStorage.setItem('dailyHistory', JSON.stringify(merged));
+      const allMonths = [...new Set(Object.keys(merged).map(d=>d.slice(0,7)))].sort().reverse();
+      sel.innerHTML = allMonths.map(m => {
+        const [y,mo] = m.split('-');
+        const thMonth = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][parseInt(mo)];
+        return `<option value="${m}">${thMonth} ${parseInt(y)+543}</option>`;
+      }).join('');
+      renderMonthly();
+    } else if (!months.length) {
+      toast('ยังไม่มีข้อมูลที่บันทึกไว้');
+    }
+  })
+  .catch(() => {
+    if (!months.length) toast('ไม่มีข้อมูล');
+  });
 }
 
 function closeMonthly() {
