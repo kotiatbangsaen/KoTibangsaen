@@ -969,13 +969,10 @@ function deleteDailyRecord(dateKey) {
   delete historyData[dateKey];
   localStorage.setItem('dailyHistory', JSON.stringify(historyData));
   toast('กำลังลบ...');
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify({ action: 'deleteDaily', date: dateKey })
-  })
+  fetch(SCRIPT_URL + '?action=deleteDaily&date=' + dateKey)
   .then(r => r.json())
   .then(() => { toast('ลบข้อมูลวันที่ ' + dateKey + ' แล้ว'); renderMonthly(); })
-  .catch(() => { toast('ลบ local แล้ว (ไม่มีเน็ต)'); renderMonthly(); });
+  .catch(() => { toast('ลบ local แล้ว'); renderMonthly(); });
 }
 
 function exportMonthlyImage() {
