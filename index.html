@@ -969,8 +969,12 @@ function deleteDailyRecord(dateKey) {
   delete historyData[dateKey];
   localStorage.setItem('dailyHistory', JSON.stringify(historyData));
   toast('กำลังลบ...');
-  fetch(SCRIPT_URL + '?action=deleteDaily&date=' + dateKey)
-  .then(r => r.json())
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'deleteDaily', date: dateKey })
+  })
   .then(() => { toast('ลบข้อมูลวันที่ ' + dateKey + ' แล้ว'); renderMonthly(); })
   .catch(() => { toast('ลบ local แล้ว'); renderMonthly(); });
 }
