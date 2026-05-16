@@ -161,7 +161,8 @@
           onfocus="showSuggestions(this.value)"
           onblur="setTimeout(hideSuggestions,250)"
           class="w-full rounded-xl py-3 px-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-400" style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
-        <div id="suggestion-box" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:2px solid rgba(192,132,252,0.6);border-radius:16px;box-shadow:0 8px 32px rgba(192,132,252,0.4);max-height:240px;overflow-y:auto;z-index:99999;"></div>
+        <iframe name="hidden-iframe" style="display:none;"></iframe>
+<div id="suggestion-box" style="display:none;position:absolute;top:100%;left:0;right:0;margin-top:4px;background:white;border:2px solid rgba(192,132,252,0.6);border-radius:16px;box-shadow:0 8px 32px rgba(192,132,252,0.4);max-height:240px;overflow-y:auto;z-index:99999;"></div>
       </div>
       <div>
         <label class="text-xs block mb-1" style="color:#a07cc0;">จำนวน</label>
@@ -1001,14 +1002,11 @@ function deleteDailyRecord(dateKey) {
   delete historyData[dateKey];
   localStorage.setItem('dailyHistory', JSON.stringify(historyData));
   toast('กำลังลบ...');
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'deleteDaily', date: dateKey })
-  })
-  .then(() => { toast('ลบข้อมูลวันที่ ' + dateKey + ' แล้ว'); renderMonthly(); })
-  .catch(() => { toast('ลบ local แล้ว'); renderMonthly(); });
+  const delData = encodeURIComponent(JSON.stringify({ action: 'deleteDaily', date: dateKey }));
+  jsonpRequest(SCRIPT_URL + '?payload=' + delData, function(res) {
+    toast('ลบข้อมูลวันที่ ' + dateKey + ' แล้ว');
+    renderMonthly();
+  });
 }
 
 function exportMonthlyImage() {
@@ -1036,6 +1034,23 @@ function exportMonthlyImage() {
       }
     }, 'image/png');
   });
+}
+
+function jsonpRequest(url, callback) {
+  const cbName = 'jsonpCb_' + Date.now();
+  window[cbName] = function(data) {
+    delete window[cbName];
+    document.head.removeChild(script);
+    callback(data);
+  };
+  const script = document.createElement('script');
+  script.src = url + '&callback=' + cbName;
+  script.onerror = function() {
+    delete window[cbName];
+    document.head.removeChild(script);
+    callback(null);
+  };
+  document.head.appendChild(script);
 }
 
 function fmt(n){return Number(n).toLocaleString('th-TH');}
