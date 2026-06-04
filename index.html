@@ -780,16 +780,42 @@ function saveDailyRecord() {
   historyData[dateKey] = record;
   localStorage.setItem('dailyHistory', JSON.stringify(historyData));
 
-  // Sync to Google Sheets via JSONP
+  // Sync to Google Sheets via JSONP - split summary and items
   toast('กำลังบันทึก...');
-  const saveData = encodeURIComponent(JSON.stringify({
-    action: 'saveDailyRecord', date: dateKey, record
+
+  // Step 1: Send summary without items (keep URL short)
+  const summaryRecord = Object.assign({}, record);
+  delete summaryRecord.items;
+  const summaryData = encodeURIComponent(JSON.stringify({
+    action: 'saveDailyRecord', date: dateKey, record: summaryRecord
   }));
-  jsonpRequest(SCRIPT_URL + '?payload=' + saveData, function(res) {
-    if (res && res.success) {
-      toast('บันทึกวันที่ ' + dateKey + ' เรียบร้อย');
-    } else {
+  jsonpRequest(SCRIPT_URL + '?payload=' + summaryData, function(res1) {
+    if (!res1 || !res1.success) {
       toast('บันทึก local แล้ว (sync ล้มเหลว)');
+      return;
+    }
+    // Step 2: Send items in chunks of 20
+    const allItems = record.items || [];
+    const chunkSize = 20;
+    let idx = 0;
+    function sendChunk() {
+      if (idx >= allItems.length) {
+        toast('บันทึกวันที่ ' + dateKey + ' เรียบร้อย');
+        return;
+      }
+      const chunk = allItems.slice(idx, idx + chunkSize);
+      idx += chunkSize;
+      const itemsData = encodeURIComponent(JSON.stringify({
+        action: 'saveItems', date: dateKey, items: chunk, append: idx > chunkSize
+      }));
+      jsonpRequest(SCRIPT_URL + '?payload=' + itemsData, function() {
+        sendChunk();
+      });
+    }
+    if (allItems.length > 0) {
+      sendChunk();
+    } else {
+      toast('บันทึกวันที่ ' + dateKey + ' เรียบร้อย');
     }
   });
 }
