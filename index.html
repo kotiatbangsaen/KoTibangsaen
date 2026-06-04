@@ -145,7 +145,7 @@
       </div>
       <button onclick="saveSummary()" class="rounded-xl py-2.5 px-4 text-white text-sm font-semibold whitespace-nowrap"
         style="background:linear-gradient(135deg,#c084fc,#818cf8);flex-shrink:0;">
-        บันทึก ✓
+        เพิ่ม ✓
       </button>
     </div>
   </section>
@@ -344,6 +344,7 @@
         <div style="display:flex;gap:8px;align-items:center;">
           <select id="monthly-month-sel" onchange="renderMonthly()" style="border-radius:10px;padding:6px 10px;border:1px solid rgba(200,160,255,0.4);background:rgba(255,255,255,0.8);color:#3d2c5e;font-size:13px;"></select>
           <button onclick="exportMonthlyCSV()" style="background:linear-gradient(135deg,#34d399,#059669);color:white;border:none;border-radius:10px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;">⬇ CSV</button>
+          <button onclick="syncAllToSheets()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:10px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;">☁️ Sync ทั้งหมด</button>
           <button onclick="exportMonthlyImage()" style="background:linear-gradient(135deg,#c084fc,#818cf8);color:white;border:none;border-radius:10px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;">🖼 รูปภาพ</button>
           <button onclick="closeMonthly()" style="background:rgba(0,0,0,0.15);color:#3d2c5e;border:none;border-radius:10px;padding:7px 12px;font-size:18px;cursor:pointer;line-height:1;">×</button>
         </div>
@@ -1092,6 +1093,48 @@ function jsonpRequest(url, callback) {
     callback(null);
   };
   document.head.appendChild(script);
+}
+
+function syncAllToSheets() {
+  const h = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
+  const keys = Object.keys(h);
+  if (!keys.length) { toast('ไม่มีข้อมูลใน local'); return; }
+  toast('กำลัง Sync ' + keys.length + ' วัน...');
+  let i = 0;
+  let success = 0;
+  let fail = 0;
+  function syncNext() {
+    if (i >= keys.length) {
+      toast('Sync เสร็จแล้ว ' + success + ' วัน สำเร็จ / ' + fail + ' วัน ล้มเหลว');
+      renderMonthly();
+      return;
+    }
+    const dateKey = keys[i++];
+    const record = h[dateKey];
+    if (!record) { syncNext(); return; }
+    const summaryRecord = Object.assign({}, record);
+    delete summaryRecord.items;
+    const summaryData = encodeURIComponent(JSON.stringify({
+      action: 'saveDailyRecord', date: dateKey, record: summaryRecord
+    }));
+    jsonpRequest(SCRIPT_URL + '?payload=' + summaryData, function(res) {
+      if (!res || !res.success) { fail++; syncNext(); return; }
+      success++;
+      const allItems = record.items || [];
+      let idx = 0;
+      function sendChunk() {
+        if (idx >= allItems.length) { syncNext(); return; }
+        const chunk = allItems.slice(idx, idx + 20);
+        idx += 20;
+        const itemsData = encodeURIComponent(JSON.stringify({
+          action: 'saveItems', date: dateKey, items: chunk, append: idx > 20
+        }));
+        jsonpRequest(SCRIPT_URL + '?payload=' + itemsData, function() { sendChunk(); });
+      }
+      allItems.length > 0 ? sendChunk() : syncNext();
+    });
+  }
+  syncNext();
 }
 
 function fmt(n){return Number(n).toLocaleString('th-TH');}
