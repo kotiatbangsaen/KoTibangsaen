@@ -125,6 +125,10 @@
         <p class="text-xs mb-1" style="color:#a07cc0;">กล่องรวม</p>
         <p id="d-qty" class="text-xl font-bold" style="color:#f97316;">0 กล่อง</p>
       </div>
+      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
+        <p class="text-xs mb-1" style="color:#a07cc0;">กล่องเล็ก (≤50฿)</p>
+        <p id="d-small-qty" class="text-xl font-bold" style="color:#ec4899;">0 กล่อง</p>
+      </div>
     </div>
   </section>
 
@@ -408,6 +412,7 @@
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">LINE</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">Shopee</th>
               <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">เงินสด</th>
+              <th style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:600;">กล่องเล็ก</th>
               <th style="padding:8px 12px;text-align:center;color:#7c3aed;font-weight:600;">ลบ</th>
               </tr>
             </thead>
@@ -514,13 +519,14 @@ function calcStats() {
   const linemanQty   = items.filter(i=>i.channel==='LINE MAN').reduce((s,i)=>s+i.qty,0);
   const shopeeQty    = items.filter(i=>i.channel==='ShopeeFood').reduce((s,i)=>s+i.qty,0);
   const totalQty     = items.reduce((s,i)=>s+i.qty,0);
+  const smallQty     = items.filter(i=>i.price<=50).reduce((s,i)=>s+i.qty,0);
   const cashTotal    = items.filter(i=>i.payment==='เงินสด').reduce((s,i)=>s+i.total,0);
   const t1Total      = items.filter(i=>i.payment==='โอนป้าดำ').reduce((s,i)=>s+i.total,0);
   const t2Total      = items.filter(i=>i.payment==='โอนลุงนัน').reduce((s,i)=>s+i.total,0);
   const t3Total      = items.filter(i=>i.payment==='โอนปาล์ม').reduce((s,i)=>s+i.total,0);
   const transferTotal = t1Total + t2Total + t3Total;
   const grandTotal   = shopTotal + grabTotal + linemanTotal + shopeeTotal + summary.deliveryFee;
-  return { shopTotal, grabTotal, linemanTotal, shopeeTotal, grabQty, linemanQty, shopeeQty, totalQty, cashTotal, t1Total, t2Total, t3Total, transferTotal, grandTotal };
+  return { shopTotal, grabTotal, linemanTotal, shopeeTotal, grabQty, linemanQty, shopeeQty, totalQty, smallQty, cashTotal, t1Total, t2Total, t3Total, transferTotal, grandTotal };
 }
 
 function render() {
@@ -538,6 +544,7 @@ function render() {
       <td class="px-3 py-3 text-right" style="color:#7c6b9e;">${fmt(it.price)}</td>
       <td class="px-3 py-3 text-right font-semibold" style="color:#3d2c5e;">${fmt(it.total)}</td>
       <td class="px-3 py-3 text-center hidden sm:table-cell"><span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">${esc(it.channel)}</span></td>
+      <td class="px-3 py-3 text-center hidden sm:table-cell">${it.price<=50?'<span style="font-size:11px;background:#fce7f3;color:#ec4899;padding:2px 8px;border-radius:20px;font-weight:600;">'+it.qty+' กล่อง</span>':''}</td>
       <td class="px-3 py-3 text-center hidden sm:table-cell"><span class="text-xs px-2 py-1 rounded-full" style="background:#f3e8ff;color:#7c3aed;">${esc(it.payment||'-')}</span></td>
       <td class="px-3 py-3 text-center"><button onclick="removeItem(${it.id})" class="text-xl leading-none font-light" style="color:#d8b4fe;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#d8b4fe'">×</button></td>
     </tr>`;
@@ -557,6 +564,7 @@ function updateDashboard() {
   document.getElementById('d-customers').textContent     = fmt(summary.customers)+' คน';
   document.getElementById('d-delivery-fee').textContent  = fmt(summary.deliveryFee)+' ฿';
   document.getElementById('d-qty').textContent           = fmt(s.totalQty)+' กล่อง';
+  document.getElementById('d-small-qty').textContent      = fmt(s.smallQty)+' กล่อง';
   document.getElementById('d-grab').textContent          = fmt(s.grabTotal)+' ฿';
   document.getElementById('d-grab-qty').textContent      = s.grabQty+' กล่อง';
   document.getElementById('d-lineman').textContent       = fmt(s.linemanTotal)+' ฿';
@@ -660,6 +668,7 @@ function exportImage(mode='summary') {
   document.getElementById('snap-shopeefood-qty').textContent = s.shopeeQty+' กล่อง';
   document.getElementById('snap-customers').textContent    = fmt(summary.customers)+' คน';
   document.getElementById('snap-qty').textContent          = fmt(s.totalQty)+' กล่อง';
+  if(document.getElementById('snap-small-qty')) document.getElementById('snap-small-qty').textContent = fmt(s.smallQty)+' กล่อง';
   const snapItemsEl = document.getElementById('snap-items');
   const snapItemsWrapper = document.getElementById('snap-items-wrapper');
   if (mode === 'summary') {
@@ -739,7 +748,8 @@ function exportCSV() {
     'LINE MAN(บาท),'+s.linemanTotal+',กล่อง,'+s.linemanQty,
     'ShopeeFood(บาท),'+s.shopeeTotal+',กล่อง,'+s.shopeeQty,
     'จำนวนลูกค้า,'+summary.customers,
-    'กล่องรวม,'+s.totalQty];
+    'กล่องรวม,'+s.totalQty,
+    'กล่องเล็ก(<=50บาท),'+s.smallQty];
   const csv='\uFEFF'+[headers.join(','),...rows,...sumRows].join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
@@ -773,6 +783,7 @@ function saveDailyRecord() {
     t3Total: s.t3Total,
     deliveryFee: summary.deliveryFee,
     totalQty: s.totalQty,
+    smallQty: s.smallQty,
     customers: summary.customers,
     items: items.map(i=>({name:i.name,qty:i.qty,price:i.price,total:i.total,channel:i.channel,payment:i.payment}))
   };
@@ -931,6 +942,7 @@ function renderMonthly() {
     agg.qty += r.totalQty || 0;
     agg.customers += r.customers || 0;
     agg.cash += r.cashTotal || 0;
+    agg.smallQty = (agg.smallQty||0) + (r.smallQty||0);
     agg.t1 += r.t1Total || 0;
     agg.t2 += r.t2Total || 0;
     agg.t3 += r.t3Total || 0;
@@ -940,6 +952,7 @@ function renderMonthly() {
     agg.lineman += r.linemanTotal || 0;
     agg.shopee += r.shopeeTotal || 0;
     agg.cash += r.cashTotal || 0;
+    agg.smallQty = (agg.smallQty||0) + (r.smallQty||0);
     (r.items||[]).forEach(it => {
       if (!agg.menus[it.name]) agg.menus[it.name] = {qty:0,total:0};
       agg.menus[it.name].qty += it.qty;
@@ -1001,6 +1014,7 @@ function renderMonthly() {
       <td style="padding:7px 12px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.cashTotal||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#ec4899;">${fmt(r.smallQty||0)}</td>
       <td style="padding:7px 12px;text-align:center;">
         <button onclick="deleteDailyRecord('${r.date}')" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit;">ลบ</button>
       </td>
@@ -1018,6 +1032,7 @@ function renderMonthly() {
     <td style="padding:8px 12px;text-align:right;color:#65a30d;">${fmt(agg.lineman)}</td>
     <td style="padding:8px 12px;text-align:right;color:#ea580c;">${fmt(agg.shopee)}</td>
     <td style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:700;">${fmt(agg.cash)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:700;">${fmt(agg.smallQty||0)}</td>
     <td></td>
   </tr>`;
 }
