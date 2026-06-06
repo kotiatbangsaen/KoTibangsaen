@@ -122,7 +122,7 @@
         <p id="d-customers" class="text-xl font-bold" style="color:#3d2c5e;">0 คน</p>
       </div>
       <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">กล่องรวม</p>
+        <p class="text-xs mb-1" style="color:#a07cc0;">กล่องใหญ่</p>
         <p id="d-qty" class="text-xl font-bold" style="color:#f97316;">0 กล่อง</p>
       </div>
       <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
@@ -289,8 +289,12 @@
       <div id="snap-customers" style="font-size:15px;font-weight:700;color:#fff;">0 คน</div>
     </div>
     <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">กล่องรวม</div>
+      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">กล่องใหญ่</div>
       <div id="snap-qty" style="font-size:15px;font-weight:700;color:#fbbf24;">0 กล่อง</div>
+    </div>
+    <div style="background:rgba(252,231,243,0.2);border-radius:10px;padding:12px;text-align:center;">
+      <div style="font-size:10px;color:#f9a8d4;margin-bottom:3px;">กล่องเล็ก (≤50฿)</div>
+      <div id="snap-small-qty" style="font-size:15px;font-weight:700;color:#f9a8d4;">0 กล่อง</div>
     </div>
   </div>
   <div id="snap-items-wrapper" style="background:rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:14px;">
@@ -361,7 +365,7 @@
           <div id="m-total" style="font-size:20px;font-weight:700;color:#7c3aed;">0 ฿</div>
         </div>
         <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">กล่องรวม</div>
+          <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">กล่องใหญ่</div>
           <div id="m-qty" style="font-size:20px;font-weight:700;color:#f97316;">0 กล่อง</div>
         </div>
         <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
@@ -379,6 +383,10 @@
         <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
           <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">เดลิเวอรีรวม</div>
           <div id="m-delivery" style="font-size:18px;font-weight:700;color:#0284c7;">0 ฿</div>
+        </div>
+        <div style="background:rgba(252,231,243,0.8);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(236,72,153,0.2);">
+          <div style="font-size:11px;color:#ec4899;margin-bottom:4px;">กล่องเล็ก (≤50฿)</div>
+          <div id="m-small-qty" style="font-size:18px;font-weight:700;color:#ec4899;">0 กล่อง</div>
         </div>
       </div>
 
@@ -405,7 +413,7 @@
               <tr style="background:rgba(237,220,255,0.5);">
                 <th style="padding:8px 12px;text-align:left;color:#7c3aed;font-weight:600;">วันที่</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ยอดรวม</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">กล่อง</th>
+                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">กล่องใหญ่</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ลูกค้า</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">หน้าร้าน</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">Grab</th>
@@ -518,8 +526,8 @@ function calcStats() {
   const grabQty      = items.filter(i=>i.channel==='Grab').reduce((s,i)=>s+i.qty,0);
   const linemanQty   = items.filter(i=>i.channel==='LINE MAN').reduce((s,i)=>s+i.qty,0);
   const shopeeQty    = items.filter(i=>i.channel==='ShopeeFood').reduce((s,i)=>s+i.qty,0);
-  const totalQty     = items.reduce((s,i)=>s+i.qty,0);
-  const smallQty     = items.filter(i=>i.price<=50).reduce((s,i)=>s+i.qty,0);
+  const totalQty     = items.filter(i=>i.price>=50).reduce((s,i)=>s+i.qty,0);
+  const smallQty     = items.filter(i=>i.price<50).reduce((s,i)=>s+i.qty,0);
   const cashTotal    = items.filter(i=>i.payment==='เงินสด').reduce((s,i)=>s+i.total,0);
   const t1Total      = items.filter(i=>i.payment==='โอนป้าดำ').reduce((s,i)=>s+i.total,0);
   const t2Total      = items.filter(i=>i.payment==='โอนลุงนัน').reduce((s,i)=>s+i.total,0);
@@ -544,7 +552,6 @@ function render() {
       <td class="px-3 py-3 text-right" style="color:#7c6b9e;">${fmt(it.price)}</td>
       <td class="px-3 py-3 text-right font-semibold" style="color:#3d2c5e;">${fmt(it.total)}</td>
       <td class="px-3 py-3 text-center hidden sm:table-cell"><span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">${esc(it.channel)}</span></td>
-      <td class="px-3 py-3 text-center hidden sm:table-cell">${it.price<=50?'<span style="font-size:11px;background:#fce7f3;color:#ec4899;padding:2px 8px;border-radius:20px;font-weight:600;">'+it.qty+' กล่อง</span>':''}</td>
       <td class="px-3 py-3 text-center hidden sm:table-cell"><span class="text-xs px-2 py-1 rounded-full" style="background:#f3e8ff;color:#7c3aed;">${esc(it.payment||'-')}</span></td>
       <td class="px-3 py-3 text-center"><button onclick="removeItem(${it.id})" class="text-xl leading-none font-light" style="color:#d8b4fe;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#d8b4fe'">×</button></td>
     </tr>`;
@@ -748,7 +755,7 @@ function exportCSV() {
     'LINE MAN(บาท),'+s.linemanTotal+',กล่อง,'+s.linemanQty,
     'ShopeeFood(บาท),'+s.shopeeTotal+',กล่อง,'+s.shopeeQty,
     'จำนวนลูกค้า,'+summary.customers,
-    'กล่องรวม,'+s.totalQty,
+    'กล่องใหญ่,'+s.totalQty,
     'กล่องเล็ก(<=50บาท),'+s.smallQty];
   const csv='\uFEFF'+[headers.join(','),...rows,...sumRows].join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
@@ -967,6 +974,7 @@ function renderMonthly() {
   document.getElementById('m-cash').textContent = fmt(agg.cash)+' ฿';
   document.getElementById('m-transfer').textContent = fmt(agg.t1+agg.t2+agg.t3)+' ฿';
   document.getElementById('m-delivery').textContent = fmt(agg.grab+agg.lineman+agg.shopee)+' ฿';
+  document.getElementById('m-small-qty').textContent = fmt(agg.smallQty||0)+' กล่อง';
 
   // Channel breakdown
   const channels = [
