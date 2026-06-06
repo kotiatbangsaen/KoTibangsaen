@@ -1005,30 +1005,13 @@ function renderMonthly() {
       <div style="font-size:15px;font-weight:700;color:${ch.color};">${fmt(ch.val)} ฿</div>
     </div>`).join('');
 
-  // Top menus
-  const sorted = Object.entries(agg.menus).sort((a,b)=>b[1].qty-a[1].qty).slice(0,3);
-  const maxQty = sorted[0]?.[1].qty || 1;
-  document.getElementById('m-top-menus').innerHTML = sorted.map(([name,v],i)=>`
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-      <div style="font-size:12px;font-weight:600;color:#7c3aed;width:20px;text-align:right;">${i+1}</div>
-      <div style="flex:1;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-          <span style="font-size:13px;color:#3d2c5e;font-weight:500;">${name}</span>
-          <span style="font-size:12px;color:#9c6bba;">${v.qty} กล่อง · ${fmt(v.total)} ฿</span>
-        </div>
-        <div style="background:rgba(200,160,255,0.2);border-radius:4px;height:5px;">
-          <div style="background:linear-gradient(90deg,#c084fc,#818cf8);border-radius:4px;height:5px;width:${Math.round(v.qty/maxQty*100)}%;"></div>
-        </div>
-      </div>
-    </div>`).join('');
-
-  // Daily table
+  // Daily table rows
   const tbody = document.getElementById('m-daily-body');
-  tbody.innerHTML = records.map((r,idx)=>{
-    const bg = idx%2===0?'':'background:rgba(237,220,255,0.2);';
+  tbody.innerHTML = records.map((r,idx) => {
+    const bg = idx%2===0?'background:rgba(255,255,255,0.3);':'background:rgba(237,220,255,0.25);';
     const d = new Date(r.date);
     const dateStr = `${d.getDate()}/${d.getMonth()+1}`;
-    return `<tr style="${bg}">
+    return `<tr style="${bg}border-top:1px solid rgba(200,160,255,0.25);">
       <td style="padding:7px 12px;color:#3d2c5e;font-weight:500;">${dateStr}</td>
       <td style="padding:7px 12px;text-align:right;font-weight:600;color:#7c3aed;">${fmt(r.total)} ฿</td>
       <td style="padding:7px 12px;text-align:right;color:#f97316;">${fmt(r.totalQty)}</td>
