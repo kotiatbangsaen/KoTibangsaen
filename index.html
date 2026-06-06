@@ -145,7 +145,7 @@
       </div>
       <button onclick="saveSummary()" class="rounded-xl py-2.5 px-4 text-white text-sm font-semibold whitespace-nowrap"
         style="background:linear-gradient(135deg,#c084fc,#818cf8);flex-shrink:0;">
-        เพิ่ม ✓
+        บันทึก ✓
       </button>
     </div>
   </section>
@@ -407,6 +407,7 @@
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">Grab</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">LINE</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">Shopee</th>
+              <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">เงินสด</th>
               <th style="padding:8px 12px;text-align:center;color:#7c3aed;font-weight:600;">ลบ</th>
               </tr>
             </thead>
@@ -921,7 +922,7 @@ function renderMonthly() {
   const agg = {
     total:0, qty:0, customers:0, cash:0,
     t1:0, t2:0, t3:0, deliveryFee:0,
-    shop:0, grab:0, lineman:0, shopee:0,
+    shop:0, grab:0, lineman:0, shopee:0, cashTotal:0,
     menus:{}
   };
 
@@ -938,6 +939,7 @@ function renderMonthly() {
     agg.grab += r.grabTotal || 0;
     agg.lineman += r.linemanTotal || 0;
     agg.shopee += r.shopeeTotal || 0;
+    agg.cash += r.cashTotal || 0;
     (r.items||[]).forEach(it => {
       if (!agg.menus[it.name]) agg.menus[it.name] = {qty:0,total:0};
       agg.menus[it.name].qty += it.qty;
@@ -998,6 +1000,7 @@ function renderMonthly() {
       <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.grabTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.cashTotal||0)}</td>
       <td style="padding:7px 12px;text-align:center;">
         <button onclick="deleteDailyRecord('${r.date}')" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit;">ลบ</button>
       </td>
@@ -1014,6 +1017,7 @@ function renderMonthly() {
     <td style="padding:8px 12px;text-align:right;color:#16a34a;">${fmt(agg.grab)}</td>
     <td style="padding:8px 12px;text-align:right;color:#65a30d;">${fmt(agg.lineman)}</td>
     <td style="padding:8px 12px;text-align:right;color:#ea580c;">${fmt(agg.shopee)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:700;">${fmt(agg.cash)}</td>
     <td></td>
   </tr>`;
 }
