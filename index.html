@@ -94,6 +94,10 @@
         <p class="text-xs mb-1" style="color:#7c3aed;">โอนปาล์ม</p>
         <p id="d-t3" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
       </div>
+      <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
+        <p class="text-xs mb-1" style="color:#7c3aed;">ไทยพลัส</p>
+        <p id="d-t4" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
+      </div>
     </div>
 
     <!-- เดลิเวอรี -->
@@ -193,6 +197,7 @@
           <option>โอนป้าดำ</option>
           <option>โอนลุงนัน</option>
           <option>โอนปาล์ม</option>
+          <option>ไทยพลัส</option>
         </select>
       </div>
     </div>
@@ -415,6 +420,7 @@
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">LINE</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">Shopee</th>
               <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">เงินสด</th>
+              <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ไทยพลัส</th>
               <th style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:600;">กล่องเล็ก</th>
               <th style="padding:8px 12px;text-align:center;color:#7c3aed;font-weight:600;">ลบ</th>
               </tr>
@@ -548,9 +554,10 @@ function calcStats() {
   const t1Total      = items.filter(i=>i.payment==='โอนป้าดำ').reduce((s,i)=>s+i.total,0);
   const t2Total      = items.filter(i=>i.payment==='โอนลุงนัน').reduce((s,i)=>s+i.total,0);
   const t3Total      = items.filter(i=>i.payment==='โอนปาล์ม').reduce((s,i)=>s+i.total,0);
-  const transferTotal = t1Total + t2Total + t3Total;
+  const t4Total      = items.filter(i=>i.payment==='ไทยพลัส').reduce((s,i)=>s+i.total,0);
+  const transferTotal = t1Total + t2Total + t3Total + t4Total;
   const grandTotal   = shopTotal + grabTotal + linemanTotal + shopeeTotal + summary.deliveryFee;
-  return { shopTotal, grabTotal, linemanTotal, shopeeTotal, grabQty, linemanQty, shopeeQty, totalQty, smallQty, cashTotal, t1Total, t2Total, t3Total, transferTotal, grandTotal };
+  return { shopTotal, grabTotal, linemanTotal, shopeeTotal, grabQty, linemanQty, shopeeQty, totalQty, smallQty, cashTotal, t1Total, t2Total, t3Total, t4Total, transferTotal, grandTotal };
 }
 
 function render() {
@@ -582,6 +589,7 @@ function updateDashboard() {
   document.getElementById('d-t1').textContent            = fmt(s.t1Total)+' ฿';
   document.getElementById('d-t2').textContent            = fmt(s.t2Total)+' ฿';
   document.getElementById('d-t3').textContent            = fmt(s.t3Total)+' ฿';
+  document.getElementById('d-t4').textContent            = fmt(s.t4Total)+' ฿';
   document.getElementById('d-cash').textContent          = fmt(s.cashTotal)+' ฿';
 
   document.getElementById('d-customers').textContent     = fmt(summary.customers)+' คน';
@@ -681,6 +689,7 @@ function exportImage(mode='summary') {
   document.getElementById('snap-t1').textContent            = fmt(s.t1Total)+' ฿';
   document.getElementById('snap-t2').textContent            = fmt(s.t2Total)+' ฿';
   document.getElementById('snap-t3').textContent            = fmt(s.t3Total)+' ฿';
+  document.getElementById('snap-t4').textContent            = fmt(s.t4Total)+' ฿';
   document.getElementById('snap-cash').textContent         = fmt(s.cashTotal)+' ฿';
   document.getElementById('snap-delfee').textContent       = fmt(summary.deliveryFee)+' ฿';
   document.getElementById('snap-grab').textContent         = fmt(s.grabTotal)+' ฿';
@@ -765,6 +774,7 @@ function exportCSV() {
     'โอนป้าดำ(บาท),'+s.t1Total,
     'โอนลุงนัน(บาท),'+s.t2Total,
     'โอนปาล์ม(บาท),'+s.t3Total,
+    'ไทยพลัส(บาท),'+s.t4Total,
     'เงินสด(บาท),'+s.cashTotal,
     'ค่าส่ง(บาท),'+summary.deliveryFee,
     'Grab(บาท),'+s.grabTotal+',กล่อง,'+s.grabQty,
@@ -804,6 +814,7 @@ function saveDailyRecord() {
     t1Total: s.t1Total,
     t2Total: s.t2Total,
     t3Total: s.t3Total,
+    t4Total: s.t4Total,
     deliveryFee: summary.deliveryFee,
     totalQty: s.totalQty,
     smallQty: s.smallQty,
@@ -969,6 +980,7 @@ function renderMonthly() {
     agg.t1 += r.t1Total || 0;
     agg.t2 += r.t2Total || 0;
     agg.t3 += r.t3Total || 0;
+    agg.t4 = (agg.t4||0) + (r.t4Total||0);
     agg.deliveryFee += r.deliveryFee || 0;
     agg.shop += r.shopTotal || 0;
     agg.grab += r.grabTotal || 0;
@@ -988,7 +1000,7 @@ function renderMonthly() {
   document.getElementById('m-qty').textContent = fmt(agg.qty)+' กล่อง';
   document.getElementById('m-customers').textContent = fmt(agg.customers)+' คน';
   document.getElementById('m-cash').textContent = fmt(agg.cash)+' ฿';
-  document.getElementById('m-transfer').textContent = fmt(agg.t1+agg.t2+agg.t3)+' ฿';
+  document.getElementById('m-transfer').textContent = fmt(agg.t1+agg.t2+agg.t3+(agg.t4||0))+' ฿';
   document.getElementById('m-delivery').textContent = fmt(agg.grab+agg.lineman+agg.shopee)+' ฿';
   document.getElementById('m-small-qty').textContent = fmt(agg.smallQty||0)+' กล่อง';
 
@@ -1021,6 +1033,7 @@ function renderMonthly() {
       <td style="padding:7px 12px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.cashTotal||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t4Total||0)}</td>
       <td style="padding:7px 12px;text-align:right;color:#ec4899;">${fmt(r.smallQty||0)}</td>
       <td style="padding:7px 12px;text-align:center;">
         <button onclick="deleteDailyRecord('${r.date}')" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit;">ลบ</button>
@@ -1039,6 +1052,7 @@ function renderMonthly() {
     <td style="padding:8px 12px;text-align:right;color:#65a30d;">${fmt(agg.lineman)}</td>
     <td style="padding:8px 12px;text-align:right;color:#ea580c;">${fmt(agg.shopee)}</td>
     <td style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:700;">${fmt(agg.cash)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:700;">${fmt(agg.t4||0)}</td>
     <td style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:700;">${fmt(agg.smallQty||0)}</td>
     <td></td>
   </tr>`;
