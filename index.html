@@ -270,6 +270,10 @@
       <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">โอนปาล์ม</div>
       <div id="snap-t3" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
     </div>
+    <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ไทยพลัส</div>
+      <div id="snap-t4" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
+    </div>
   </div>
     <div style="font-size:10px;font-weight:600;color:#bdd7ee;margin-bottom:5px;text-transform:uppercase;">🛵 เดลิเวอรี</div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:10px;">
@@ -314,6 +318,32 @@
     <div id="snap-items"></div>
   </div>
   <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.4);">บันทึกรายการขายรายวัน</div>
+</div>
+
+<!-- ITEMS ONLY SNAPSHOT -->
+<div id="snapshot-items-card" style="display:none;position:fixed;left:-9999px;top:0;width:680px;padding:20px;background:linear-gradient(135deg,#1e3a5f 0%,#2e75b6 100%);font-family:-apple-system,BlinkMacSystemFont,'Noto Sans Thai',sans-serif;">
+  <div style="text-align:center;margin-bottom:14px;">
+    <div style="font-size:16px;font-weight:700;color:#fff;">📋 รายการขายประจำวัน</div>
+    <div id="snap-items-date" style="font-size:11px;color:#bdd7ee;margin-top:2px;"></div>
+  </div>
+  <div style="background:rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
+    <div style="display:grid;grid-template-columns:1fr 55px 70px 80px 80px;background:rgba(0,0,0,0.2);padding:10px 14px;">
+      <div style="font-size:11px;font-weight:600;color:#bdd7ee;">เมนู</div>
+      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">กล่อง</div>
+      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ราคา/ชิ้น</div>
+      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ยอดรวม</div>
+      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">ช่องทาง</div>
+    </div>
+    <div id="snap-items-only-body"></div>
+    <div style="display:grid;grid-template-columns:1fr 55px 70px 80px 80px;padding:10px 14px;background:rgba(0,0,0,0.2);border-top:1px solid rgba(255,255,255,0.1);">
+      <div style="font-size:12px;font-weight:700;color:#fff;">รวม</div>
+      <div id="snap-items-total-qty" style="font-size:12px;font-weight:700;color:#fbbf24;text-align:center;"></div>
+      <div></div>
+      <div id="snap-items-total-thb" style="font-size:12px;font-weight:700;color:#fbbf24;text-align:right;"></div>
+      <div></div>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;">บันทึกรายการขายรายวัน</div>
 </div>
 
 <!-- ITEMS ONLY SNAPSHOT -->
@@ -385,6 +415,10 @@
         <div style="background:rgba(237,220,255,0.75);border-radius:14px;padding:14px;text-align:center;">
           <div style="font-size:11px;color:#7c3aed;margin-bottom:4px;">โอนรวม</div>
           <div id="m-transfer" style="font-size:18px;font-weight:700;color:#7c3aed;">0 ฿</div>
+        </div>
+        <div style="background:rgba(237,220,255,0.75);border-radius:14px;padding:14px;text-align:center;">
+          <div style="font-size:11px;color:#7c3aed;margin-bottom:4px;">ไทยพลัส</div>
+          <div id="m-t4" style="font-size:18px;font-weight:700;color:#7c3aed;">0 ฿</div>
         </div>
         <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
           <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">เดลิเวอรีรวม</div>
@@ -1003,6 +1037,7 @@ function renderMonthly() {
   document.getElementById('m-transfer').textContent = fmt(agg.t1+agg.t2+agg.t3+(agg.t4||0))+' ฿';
   document.getElementById('m-delivery').textContent = fmt(agg.grab+agg.lineman+agg.shopee)+' ฿';
   document.getElementById('m-small-qty').textContent = fmt(agg.smallQty||0)+' กล่อง';
+  document.getElementById('m-t4').textContent = fmt(agg.t4||0)+' ฿';
 
   // Channel breakdown
   const channels = [
