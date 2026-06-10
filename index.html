@@ -498,7 +498,8 @@ const _pad = n => String(n).padStart(2,'0');
 const todayVal = `${_today.getFullYear()}-${_pad(_today.getMonth()+1)}-${_pad(_today.getDate())}`;
 let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),2200);}
-let summary = JSON.parse(localStorage.getItem('dailySummary') || '{"t1":0,"t2":0,"t3":0,"cash":0,"customers":0,"deliveryFee":0}');
+let summary = JSON.parse(localStorage.getItem('dailySummary') || '{"t1":0,"t2":0,"t3":0,"t4":0,"cash":0,"customers":0,"deliveryFee":0}');
+if (typeof summary.t4 === 'undefined') summary.t4 = 0;
 let savedProducts = JSON.parse(localStorage.getItem('savedProducts') || '[]');
 
 const channelColors = { 'หน้าร้าน':'bg-blue-100 text-blue-700', 'Grab':'bg-green-100 text-green-700', 'LINE MAN':'bg-lime-100 text-lime-700', 'ShopeeFood':'bg-orange-100 text-orange-700' };
@@ -948,6 +949,14 @@ function showMonthly() {
         normalized[key] = rec;
       });
       const merged = Object.assign({}, localData, normalized);
+      // คงค่า t4Total จาก local ไว้ถ้า Sheets ไม่มีข้อมูล (backward compat)
+      Object.keys(merged).forEach(k => {
+        if (typeof merged[k].t4Total === 'undefined' && localData[k] && typeof localData[k].t4Total !== 'undefined') {
+          merged[k].t4Total = localData[k].t4Total;
+        } else if (typeof merged[k].t4Total === 'undefined') {
+          merged[k].t4Total = 0;
+        }
+      });
       localStorage.setItem('dailyHistory', JSON.stringify(merged));
       const allMonths = [...new Set(Object.keys(merged).map(d=>d.slice(0,7)))].sort().reverse();
       sel.innerHTML = allMonths.map(m => {
@@ -1234,6 +1243,14 @@ function showTopMenus() {
     if (res.success && res.history) {
       let localData = JSON.parse(localStorage.getItem('dailyHistory') || '{}');
       const merged = Object.assign({}, localData, res.history);
+      // คงค่า t4Total จาก local ไว้ถ้า Sheets ไม่มีข้อมูล (backward compat)
+      Object.keys(merged).forEach(k => {
+        if (typeof merged[k].t4Total === 'undefined' && localData[k] && typeof localData[k].t4Total !== 'undefined') {
+          merged[k].t4Total = localData[k].t4Total;
+        } else if (typeof merged[k].t4Total === 'undefined') {
+          merged[k].t4Total = 0;
+        }
+      });
       localStorage.setItem('dailyHistory', JSON.stringify(merged));
       renderTopMenus();
     }
