@@ -83,15 +83,15 @@
     </div>
     <div class="grid grid-cols-3 gap-3 mb-3">
       <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
-        <p class="text-xs mb-1" style="color:#7c3aed;">โอนป้าดำ</p>
+        <p class="text-xs mb-1" style="color:#7c3aed;">ป้าดำ</p>
         <p id="d-t1" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
       </div>
       <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
-        <p class="text-xs mb-1" style="color:#7c3aed;">โอนลุงนัน</p>
+        <p class="text-xs mb-1" style="color:#7c3aed;">ลุงนัน</p>
         <p id="d-t2" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
       </div>
       <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
-        <p class="text-xs mb-1" style="color:#7c3aed;">โอนปาล์ม</p>
+        <p class="text-xs mb-1" style="color:#7c3aed;">ปาล์ม</p>
         <p id="d-t3" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
       </div>
       <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
@@ -182,22 +182,16 @@
         <input id="f-price" type="number" inputmode="decimal" placeholder="0" class="w-full rounded-xl py-3 px-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-500" style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
       </div>
       <div>
-        <label class="text-xs block mb-1" style="color:#a07cc0;">ช่องทาง</label>
-        <select id="f-channel" onchange="togglePayment()" class="w-full rounded-xl py-3 px-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none" style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;">
-          <option>หน้าร้าน</option>
-          <option>Grab</option>
-          <option>LINE MAN</option>
-          <option>ShopeeFood</option>
-        </select>
-      </div>
-      <div id="payment-wrapper">
         <label class="text-xs block mb-1" style="color:#a07cc0;">วิธีชำระ</label>
         <select id="f-payment" class="w-full rounded-xl py-3 px-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none" style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;">
           <option>เงินสด</option>
-          <option>โอนป้าดำ</option>
-          <option>โอนลุงนัน</option>
-          <option>โอนปาล์ม</option>
+          <option>ป้าดำ</option>
+          <option>ลุงนัน</option>
+          <option>ปาล์ม</option>
           <option>ไทยพลัส</option>
+          <option>Grab</option>
+          <option>LINE MAN</option>
+          <option>ShopeeFood</option>
         </select>
       </div>
     </div>
@@ -259,15 +253,15 @@
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:10px;">
     <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">โอนป้าดำ</div>
+      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ป้าดำ</div>
       <div id="snap-t1" style="font-size:13px;font-weight:700;color:#c5a3ff;">0 ฿</div>
     </div>
     <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">โอนลุงนัน</div>
+      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ลุงนัน</div>
       <div id="snap-t2" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
     </div>
     <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">โอนปาล์ม</div>
+      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ปาล์ม</div>
       <div id="snap-t3" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
     </div>
     <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
@@ -420,20 +414,22 @@
           <div style="font-size:11px;color:#7c3aed;margin-bottom:4px;">ไทยพลัส</div>
           <div id="m-t4" style="font-size:18px;font-weight:700;color:#7c3aed;">0 ฿</div>
         </div>
-        <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">เดลิเวอรีรวม</div>
-          <div id="m-delivery" style="font-size:18px;font-weight:700;color:#0284c7;">0 ฿</div>
+        <div style="background:rgba(209,250,229,0.75);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(22,163,74,0.2);">
+          <div style="font-size:11px;color:#16a34a;margin-bottom:4px;">Grab</div>
+          <div id="m-grab" style="font-size:18px;font-weight:700;color:#16a34a;">0 ฿</div>
+        </div>
+        <div style="background:rgba(236,252,203,0.75);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(101,163,13,0.2);">
+          <div style="font-size:11px;color:#65a30d;margin-bottom:4px;">LINE MAN</div>
+          <div id="m-lineman" style="font-size:18px;font-weight:700;color:#65a30d;">0 ฿</div>
+        </div>
+        <div style="background:rgba(255,237,213,0.75);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(234,88,12,0.2);">
+          <div style="font-size:11px;color:#ea580c;margin-bottom:4px;">ShopeeFood</div>
+          <div id="m-shopee" style="font-size:18px;font-weight:700;color:#ea580c;">0 ฿</div>
         </div>
         <div style="background:rgba(252,231,243,0.8);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(236,72,153,0.2);">
           <div style="font-size:11px;color:#ec4899;margin-bottom:4px;">กล่องเล็ก (≤50฿)</div>
           <div id="m-small-qty" style="font-size:18px;font-weight:700;color:#ec4899;">0 กล่อง</div>
         </div>
-      </div>
-
-      <!-- Channel breakdown -->
-      <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;margin-bottom:14px;">
-        <p style="font-size:12px;font-weight:600;color:#7c3aed;margin:0 0 10px;text-transform:uppercase;letter-spacing:0.05em;">🛵 แยกตามช่องทาง</p>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;" id="m-channels"></div>
       </div>
 
       <!-- Daily table -->
@@ -449,14 +445,16 @@
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ยอดรวม</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">กล่องใหญ่</th>
                 <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ลูกค้า</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">หน้าร้าน</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">Grab</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">LINE</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">Shopee</th>
-              <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">เงินสด</th>
-              <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ไทยพลัส</th>
-              <th style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:600;">กล่องเล็ก</th>
-              <th style="padding:8px 12px;text-align:center;color:#7c3aed;font-weight:600;">ลบ</th>
+                <th style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:600;">เงินสด</th>
+                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ป้าดำ</th>
+                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ลุงนัน</th>
+                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ปาล์ม</th>
+                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ไทยพลัส</th>
+                <th style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:600;">Grab</th>
+                <th style="padding:8px 12px;text-align:right;color:#65a30d;font-weight:600;">LINE</th>
+                <th style="padding:8px 12px;text-align:right;color:#ea580c;font-weight:600;">Shopee</th>
+                <th style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:600;">กล่องเล็ก</th>
+                <th style="padding:8px 12px;text-align:center;color:#7c3aed;font-weight:600;">ลบ</th>
               </tr>
             </thead>
             <tbody id="m-daily-body"></tbody>
@@ -513,7 +511,6 @@ const channelColors = { 'หน้าร้าน':'bg-blue-100 text-blue-700', 
   document.getElementById('s-delivery-fee').value = summary.deliveryFee || '';
   refreshDatalist();
   render();
-  togglePayment();
 })();
 
 document.getElementById('f-name').addEventListener('keydown', e => { if (e.key==='Enter') document.getElementById('f-price').focus(); });
@@ -531,8 +528,8 @@ function addItem() {
   const name = document.getElementById('f-name').value.trim();
   const qty = parseInt(document.getElementById('f-qty').value) || 1;
   const price = parseFloat(document.getElementById('f-price').value) || 0;
-  const channel = document.getElementById('f-channel').value;
-  const payment = channel === 'หน้าร้าน' ? document.getElementById('f-payment').value : channel;
+  const payment = document.getElementById('f-payment').value;
+  const channel = (payment === 'Grab') ? 'Grab' : (payment === 'LINE MAN') ? 'LINE MAN' : (payment === 'ShopeeFood') ? 'ShopeeFood' : 'หน้าร้าน';
   if (!name) { document.getElementById('f-name').focus(); toast('กรุณาใส่ชื่อสินค้า'); return; }
   if (!price) { document.getElementById('f-price').focus(); toast('กรุณาใส่ราคา'); return; }
   // Check for existing item with same name + channel + payment
@@ -577,18 +574,18 @@ function clearItems() {
 
 function calcStats() {
   const shopTotal    = items.filter(i=>i.channel==='หน้าร้าน').reduce((s,i)=>s+i.total,0);
-  const grabTotal    = items.filter(i=>i.channel==='Grab').reduce((s,i)=>s+i.total,0);
-  const linemanTotal = items.filter(i=>i.channel==='LINE MAN').reduce((s,i)=>s+i.total,0);
-  const shopeeTotal  = items.filter(i=>i.channel==='ShopeeFood').reduce((s,i)=>s+i.total,0);
-  const grabQty      = items.filter(i=>i.channel==='Grab').reduce((s,i)=>s+i.qty,0);
-  const linemanQty   = items.filter(i=>i.channel==='LINE MAN').reduce((s,i)=>s+i.qty,0);
-  const shopeeQty    = items.filter(i=>i.channel==='ShopeeFood').reduce((s,i)=>s+i.qty,0);
+  const grabTotal    = items.filter(i=>i.payment==='Grab').reduce((s,i)=>s+i.total,0);
+  const linemanTotal = items.filter(i=>i.payment==='LINE MAN').reduce((s,i)=>s+i.total,0);
+  const shopeeTotal  = items.filter(i=>i.payment==='ShopeeFood').reduce((s,i)=>s+i.total,0);
+  const grabQty      = items.filter(i=>i.payment==='Grab').reduce((s,i)=>s+i.qty,0);
+  const linemanQty   = items.filter(i=>i.payment==='LINE MAN').reduce((s,i)=>s+i.qty,0);
+  const shopeeQty    = items.filter(i=>i.payment==='ShopeeFood').reduce((s,i)=>s+i.qty,0);
   const totalQty     = items.filter(i=>i.price>=50).reduce((s,i)=>s+i.qty,0);
   const smallQty     = items.filter(i=>i.price<50).reduce((s,i)=>s+i.qty,0);
   const cashTotal    = items.filter(i=>i.payment==='เงินสด').reduce((s,i)=>s+i.total,0);
-  const t1Total      = items.filter(i=>i.payment==='โอนป้าดำ').reduce((s,i)=>s+i.total,0);
-  const t2Total      = items.filter(i=>i.payment==='โอนลุงนัน').reduce((s,i)=>s+i.total,0);
-  const t3Total      = items.filter(i=>i.payment==='โอนปาล์ม').reduce((s,i)=>s+i.total,0);
+  const t1Total      = items.filter(i=>i.payment==='ป้าดำ'||i.payment==='โอนป้าดำ').reduce((s,i)=>s+i.total,0);
+  const t2Total      = items.filter(i=>i.payment==='ลุงนัน'||i.payment==='โอนลุงนัน').reduce((s,i)=>s+i.total,0);
+  const t3Total      = items.filter(i=>i.payment==='ปาล์ม'||i.payment==='โอนปาล์ม').reduce((s,i)=>s+i.total,0);
   const t4Total      = items.filter(i=>i.payment==='ไทยพลัส').reduce((s,i)=>s+i.total,0);
   const transferTotal = t1Total + t2Total + t3Total + t4Total;
   const grandTotal   = shopTotal + grabTotal + linemanTotal + shopeeTotal + summary.deliveryFee;
@@ -699,16 +696,7 @@ function selectProduct(name) {
   setTimeout(()=>document.getElementById('f-price').focus(), 50);
 }
 
-function togglePayment() {
-  const ch = document.getElementById('f-channel').value;
-  const wrapper = document.getElementById('payment-wrapper');
-  if (ch === 'หน้าร้าน') {
-    wrapper.style.display = 'block';
-  } else {
-    wrapper.style.display = 'none';
-    document.getElementById('f-payment').value = 'เงินสด';
-  }
-}
+function togglePayment() { /* deprecated: payment and channel merged */ }
 
 function refreshDatalist() {
   // updated via showSuggestions
@@ -806,9 +794,9 @@ function exportCSV() {
   const sumRows=['','--- สรุปประจำวัน ---',
     'ยอดขายรวมทั้งหมด(บาท),'+s.grandTotal,
     'ยอดหน้าร้าน(บาท),'+s.shopTotal,
-    'โอนป้าดำ(บาท),'+s.t1Total,
-    'โอนลุงนัน(บาท),'+s.t2Total,
-    'โอนปาล์ม(บาท),'+s.t3Total,
+    'ป้าดำ(บาท),'+s.t1Total,
+    'ลุงนัน(บาท),'+s.t2Total,
+    'ปาล์ม(บาท),'+s.t3Total,
     'ไทยพลัส(บาท),'+s.t4Total,
     'เงินสด(บาท),'+s.cashTotal,
     'ค่าส่ง(บาท),'+summary.deliveryFee,
@@ -1008,9 +996,9 @@ function renderMonthly() {
 
   // Aggregate
   const agg = {
-    total:0, qty:0, customers:0, cash:0,
-    t1:0, t2:0, t3:0, deliveryFee:0,
-    shop:0, grab:0, lineman:0, shopee:0, cashTotal:0,
+    total:0, qty:0, customers:0,
+    t1:0, t2:0, t3:0, t4:0, cash:0, deliveryFee:0,
+    shop:0, grab:0, lineman:0, shopee:0,
     menus:{}
   };
 
@@ -1018,19 +1006,17 @@ function renderMonthly() {
     agg.total += r.total || 0;
     agg.qty += r.totalQty || 0;
     agg.customers += r.customers || 0;
-    agg.cash += r.cashTotal || 0;
     agg.smallQty = (agg.smallQty||0) + (r.smallQty||0);
+    agg.cash += r.cashTotal || 0;
     agg.t1 += r.t1Total || 0;
     agg.t2 += r.t2Total || 0;
     agg.t3 += r.t3Total || 0;
-    agg.t4 = (agg.t4||0) + (r.t4Total||0);
+    agg.t4 += r.t4Total || 0;
     agg.deliveryFee += r.deliveryFee || 0;
     agg.shop += r.shopTotal || 0;
     agg.grab += r.grabTotal || 0;
     agg.lineman += r.linemanTotal || 0;
     agg.shopee += r.shopeeTotal || 0;
-    agg.cash += r.cashTotal || 0;
-    agg.smallQty = (agg.smallQty||0) + (r.smallQty||0);
     (r.items||[]).forEach(it => {
       if (!agg.menus[it.name]) agg.menus[it.name] = {qty:0,total:0};
       agg.menus[it.name].qty += it.qty;
@@ -1043,23 +1029,12 @@ function renderMonthly() {
   document.getElementById('m-qty').textContent = fmt(agg.qty)+' กล่อง';
   document.getElementById('m-customers').textContent = fmt(agg.customers)+' คน';
   document.getElementById('m-cash').textContent = fmt(agg.cash)+' ฿';
-  document.getElementById('m-transfer').textContent = fmt(agg.t1+agg.t2+agg.t3+(agg.t4||0))+' ฿';
-  document.getElementById('m-delivery').textContent = fmt(agg.grab+agg.lineman+agg.shopee)+' ฿';
-  document.getElementById('m-small-qty').textContent = fmt(agg.smallQty||0)+' กล่อง';
+  document.getElementById('m-transfer').textContent = fmt(agg.t1+agg.t2+agg.t3)+' ฿';
   document.getElementById('m-t4').textContent = fmt(agg.t4||0)+' ฿';
-
-  // Channel breakdown
-  const channels = [
-    {name:'หน้าร้าน', val:agg.shop, color:'#2563eb'},
-    {name:'Grab', val:agg.grab, color:'#16a34a'},
-    {name:'LINE MAN', val:agg.lineman, color:'#65a30d'},
-    {name:'ShopeeFood', val:agg.shopee, color:'#ea580c'},
-  ];
-  document.getElementById('m-channels').innerHTML = channels.map(ch=>`
-    <div style="text-align:center;padding:10px;background:rgba(255,255,255,0.6);border-radius:10px;">
-      <div style="font-size:10px;color:#9c6bba;margin-bottom:3px;">${ch.name}</div>
-      <div style="font-size:15px;font-weight:700;color:${ch.color};">${fmt(ch.val)} ฿</div>
-    </div>`).join('');
+  document.getElementById('m-grab').textContent = fmt(agg.grab)+' ฿';
+  document.getElementById('m-lineman').textContent = fmt(agg.lineman)+' ฿';
+  document.getElementById('m-shopee').textContent = fmt(agg.shopee)+' ฿';
+  document.getElementById('m-small-qty').textContent = fmt(agg.smallQty||0)+' กล่อง';
 
   // Daily table rows
   const tbody = document.getElementById('m-daily-body');
@@ -1072,12 +1047,14 @@ function renderMonthly() {
       <td style="padding:7px 12px;text-align:right;font-weight:600;color:#7c3aed;">${fmt(r.total)} ฿</td>
       <td style="padding:7px 12px;text-align:right;color:#f97316;">${fmt(r.totalQty)}</td>
       <td style="padding:7px 12px;text-align:right;color:#0284c7;">${fmt(r.customers)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#2563eb;">${fmt(r.shopTotal)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.grabTotal)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal)}</td>
       <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.cashTotal||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t1Total||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t2Total||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t3Total||0)}</td>
       <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t4Total||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.grabTotal||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal||0)}</td>
+      <td style="padding:7px 12px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal||0)}</td>
       <td style="padding:7px 12px;text-align:right;color:#ec4899;">${fmt(r.smallQty||0)}</td>
       <td style="padding:7px 12px;text-align:center;">
         <button onclick="deleteDailyRecord('${r.date}')" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit;">ลบ</button>
@@ -1091,13 +1068,15 @@ function renderMonthly() {
     <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.total)} ฿</td>
     <td style="padding:8px 12px;text-align:right;color:#f97316;">${fmt(agg.qty)}</td>
     <td style="padding:8px 12px;text-align:right;color:#0284c7;">${fmt(agg.customers)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#2563eb;">${fmt(agg.shop)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#16a34a;">${fmt(agg.cash)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t1)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t2)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t3)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t4)}</td>
     <td style="padding:8px 12px;text-align:right;color:#16a34a;">${fmt(agg.grab)}</td>
     <td style="padding:8px 12px;text-align:right;color:#65a30d;">${fmt(agg.lineman)}</td>
     <td style="padding:8px 12px;text-align:right;color:#ea580c;">${fmt(agg.shopee)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:700;">${fmt(agg.cash)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:700;">${fmt(agg.t4||0)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:700;">${fmt(agg.smallQty||0)}</td>
+    <td style="padding:8px 12px;text-align:right;color:#ec4899;">${fmt(agg.smallQty||0)}</td>
     <td></td>
   </tr>`;
 }
@@ -1109,8 +1088,8 @@ function exportMonthlyCSV() {
   const records = Object.values(historyData).filter(r=>r.date.startsWith(month)).sort((a,b)=>a.date.localeCompare(b.date));
   if (!records.length) return;
 
-  const headers = ['วันที่','ยอดรวม(บาท)','กล่อง','ลูกค้า','หน้าร้าน','Grab','LINE MAN','ShopeeFood','เงินสด','โอนป้าดำ','โอนลุงนัน','โอนปาล์ม'];
-  const rows = records.map(r=>[r.date,r.total,r.totalQty,r.customers,r.shopTotal,r.grabTotal,r.linemanTotal,r.shopeeTotal,r.cashTotal,r.t1Total,r.t2Total,r.t3Total].join(','));
+  const headers = ['วันที่','ยอดรวม(บาท)','กล่อง','ลูกค้า','เงินสด','ป้าดำ','ลุงนัน','ปาล์ม','ไทยพลัส','Grab','LINE MAN','ShopeeFood','กล่องเล็ก'];
+  const rows = records.map(r=>[r.date,r.total,r.totalQty,r.customers,r.cashTotal||0,r.t1Total||0,r.t2Total||0,r.t3Total||0,r.t4Total||0,r.grabTotal||0,r.linemanTotal||0,r.shopeeTotal||0,r.smallQty||0].join(','));
 
   const csv = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');
   const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
