@@ -60,15 +60,14 @@
 <div class="max-w-3xl mx-auto px-4 pt-4 space-y-4">
 <!-- hidden elements for JS compat -->
 <span id="d-shop" style="display:none;"></span>
-<span id="d-delivery-fee" style="display:none;"></span>
 
   <!-- DASHBOARD -->
   <section>
 
     <!-- ยอดรวมใหญ่ -->
-    <div class="rounded-2xl px-5 py-4 mb-3" style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(192,132,252,0.18));backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.4);">
-      <p class="text-xs font-semibold mb-1" style="color:#9c6bba;letter-spacing:0.05em;">💰 ยอดขายรวมทั้งหมด</p>
-      <p id="d-total" class="text-4xl font-bold" style="color:#7c3aed;">0 ฿</p>
+    <div class="rounded-2xl px-4 py-4 mb-3" style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(192,132,252,0.18));backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.4);text-align:center;">
+      <p class="text-xs font-semibold mb-1" style="color:#9c6bba;letter-spacing:0.05em;">ยอดขายรวม</p>
+      <p id="d-total" class="text-3xl font-bold" style="color:#7c3aed;">0 ฿</p>
     </div>
 
     <!-- กลุ่ม: ภาพรวม -->
@@ -117,7 +116,7 @@
 
     <!-- กลุ่ม: เดลิเวอรี -->
     <p class="text-xs font-bold uppercase tracking-widest mb-2 px-1" style="color:#9c6bba;">🛵 เดลิเวอรี</p>
-    <div class="grid grid-cols-3 gap-2 mb-3">
+    <div class="grid grid-cols-3 gap-2 mb-1">
       <div class="rounded-2xl p-3 text-center" style="background:rgba(209,250,229,0.75);backdrop-filter:blur(10px);border:1px solid rgba(22,163,74,0.2);">
         <p class="text-xs mb-1" style="color:#16a34a;">Grab</p>
         <p id="d-grab" class="text-lg font-bold" style="color:#16a34a;">0 ฿</p>
@@ -134,30 +133,13 @@
         <p id="d-shopeefood-qty" class="text-xs mt-1" style="color:#fb923c;">0 กล่อง</p>
       </div>
     </div>
-
-  </section>
-
-  <!-- QUICK SUMMARY ROW -->
-  <section class="rounded-2xl px-4 py-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-    <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#9c6bba;">📝 ข้อมูลประจำวัน</p>
-    <div style="display:flex;gap:10px;align-items:flex-end;">
-      <div style="flex:1;">
-        <label class="text-xs block mb-1" style="color:#a07cc0;">จำนวนลูกค้า (คน)</label>
-        <input id="s-customers" type="number" inputmode="numeric" placeholder="0"
-          class="w-full rounded-xl py-2.5 px-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-400"
-          style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
+    <div class="grid grid-cols-1 gap-2 mb-3">
+      <div class="rounded-2xl p-3" style="background:rgba(224,242,254,0.75);backdrop-filter:blur(10px);border:1px solid rgba(2,132,199,0.2);display:flex;align-items:center;justify-content:space-between;">
+        <p class="text-xs font-semibold" style="color:#0284c7;">ค่าส่งรวม</p>
+        <p id="d-delivery-fee" class="text-lg font-bold" style="color:#0284c7;">0 ฿</p>
       </div>
-      <div style="flex:1;">
-        <label class="text-xs block mb-1" style="color:#a07cc0;">ค่าส่ง (฿)</label>
-        <input id="s-delivery-fee" type="number" inputmode="numeric" placeholder="0"
-          class="w-full rounded-xl py-2.5 px-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-400"
-          style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
-      </div>
-      <button onclick="saveSummary()" class="rounded-xl py-2.5 px-4 text-white text-sm font-semibold whitespace-nowrap"
-        style="background:linear-gradient(135deg,#c084fc,#818cf8);flex-shrink:0;">
-        บันทึก ✓
-      </button>
     </div>
+
   </section>
 
   <!-- ADD ITEM FORM -->
@@ -195,6 +177,14 @@
           <option>ShopeeFood</option>
         </select>
       </div>
+      <div>
+        <label class="text-xs block mb-1" style="color:#a07cc0;">ลูกค้า (คน)</label>
+        <input id="f-customers" type="number" inputmode="numeric" placeholder="0" min="0" class="w-full rounded-xl py-3 px-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-400" style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
+      </div>
+      <div>
+        <label class="text-xs block mb-1" style="color:#a07cc0;">ค่าส่ง (฿)</label>
+        <input id="f-delivery" type="number" inputmode="decimal" placeholder="0" min="0" class="w-full rounded-xl py-3 px-4 text-base focus:outline-none focus:ring-2 focus:ring-purple-400" style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
+      </div>
     </div>
     <button onclick="addItem()" class="mt-3 w-full text-white font-bold py-3 rounded-xl transition-colors text-sm" style="background:linear-gradient(135deg,#818cf8,#c084fc);box-shadow:0 4px 15px rgba(129,140,248,0.4);">+ เพิ่มรายการ</button>
   </section>
@@ -214,10 +204,12 @@
             <th class="text-right px-3 py-2.5 font-semibold" style="color:#a07cc0;">ราคา/ชิ้น</th>
             <th class="text-right px-3 py-2.5 font-semibold" style="color:#a07cc0;">ยอดรวม</th>
             <th class="text-center px-3 py-2.5 font-semibold" style="color:#a07cc0;">ชำระ</th>
+            <th class="text-right px-3 py-2.5 font-semibold" style="color:#a07cc0;">ค่าส่ง</th>
+            <th class="px-3 py-2.5"></th>
           </tr>
         </thead>
         <tbody id="items-body">
-          <tr><td colspan="5" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>
+          <tr><td colspan="7" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>
         </tbody>
       </table>
     </div>
@@ -439,7 +431,7 @@
       <!-- กลุ่ม 3: เดลิเวอรี -->
       <div style="margin-bottom:14px;">
         <div style="font-size:10px;font-weight:700;color:#9c6bba;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;padding-left:2px;">🛵 เดลิเวอรี</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
           <div style="background:rgba(209,250,229,0.75);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(22,163,74,0.2);">
             <div style="font-size:10px;color:#16a34a;margin-bottom:3px;font-weight:600;">Grab</div>
             <div id="m-grab" style="font-size:17px;font-weight:700;color:#16a34a;">0 ฿</div>
@@ -452,6 +444,10 @@
             <div style="font-size:10px;color:#ea580c;margin-bottom:3px;font-weight:600;">ShopeeFood</div>
             <div id="m-shopee" style="font-size:17px;font-weight:700;color:#ea580c;">0 ฿</div>
           </div>
+        </div>
+        <div style="background:rgba(224,242,254,0.75);border-radius:14px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(2,132,199,0.2);">
+          <div style="font-size:10px;color:#0284c7;font-weight:600;">ค่าส่งรวม</div>
+          <div id="m-delivery" style="font-size:16px;font-weight:700;color:#0284c7;">0 ฿</div>
         </div>
       </div>
 
@@ -469,6 +465,7 @@
                 <th style="padding:7px 6px;text-align:right;color:#f97316;font-weight:600;white-space:nowrap;">กล่องใหญ่</th>
                 <th style="padding:7px 6px;text-align:right;color:#ec4899;font-weight:600;white-space:nowrap;">กล่องเล็ก</th>
                 <th style="padding:7px 6px;text-align:right;color:#0284c7;font-weight:600;white-space:nowrap;">ลูกค้า</th>
+                <th style="padding:7px 6px;text-align:right;color:#0284c7;font-weight:600;white-space:nowrap;">ค่าส่ง</th>
                 <th style="padding:7px 6px;text-align:right;color:#16a34a;font-weight:600;white-space:nowrap;">เงินสด</th>
                 <th style="padding:7px 6px;text-align:right;color:#7c3aed;font-weight:600;white-space:nowrap;">ป้าดำ</th>
                 <th style="padding:7px 6px;text-align:right;color:#7c3aed;font-weight:600;white-space:nowrap;">ลุงนัน</th>
@@ -528,10 +525,10 @@ const channelColors = { 'หน้าร้าน':'bg-blue-100 text-blue-700', 
 (function init() {
   const d = new Date();
   // date shown in input
-  document.getElementById('s-customers').value = summary.customers || '';
+  document.getElementById('s-customers') && (document.getElementById('s-customers').value = summary.customers || '');
   const saveDateEl = document.getElementById('save-date');
   if (saveDateEl) saveDateEl.value = todayVal;
-  document.getElementById('s-delivery-fee').value = summary.deliveryFee || '';
+  document.getElementById('s-delivery-fee') && (document.getElementById('s-delivery-fee').value = summary.deliveryFee || '');
   refreshDatalist();
   render();
 })();
@@ -540,11 +537,9 @@ document.getElementById('f-name').addEventListener('keydown', e => { if (e.key==
 document.getElementById('f-price').addEventListener('keydown', e => { if (e.key==='Enter') addItem(); });
 
 function saveSummary() {
-  summary.customers = parseInt(document.getElementById('s-customers').value) || 0;
-  summary.deliveryFee = parseFloat(document.getElementById('s-delivery-fee').value) || 0;
+  // legacy: kept for compatibility but no longer called from UI
   localStorage.setItem('dailySummary', JSON.stringify(summary));
   updateDashboard();
-  toast('บันทึกแล้ว ✓');
 }
 
 function addItem() {
@@ -555,14 +550,26 @@ function addItem() {
   const channel = (payment === 'Grab') ? 'Grab' : (payment === 'LINE MAN') ? 'LINE MAN' : (payment === 'ShopeeFood') ? 'ShopeeFood' : 'หน้าร้าน';
   if (!name) { document.getElementById('f-name').focus(); toast('กรุณาใส่ชื่อสินค้า'); return; }
   if (!price) { document.getElementById('f-price').focus(); toast('กรุณาใส่ราคา'); return; }
+
+  // สะสม ลูกค้า และ ค่าส่ง
+  const addCustomers = parseInt(document.getElementById('f-customers').value) || 0;
+  const addDelivery = parseFloat(document.getElementById('f-delivery').value) || 0;
+  if (addCustomers > 0) summary.customers = (summary.customers || 0) + addCustomers;
+  if (addDelivery > 0) summary.deliveryFee = (summary.deliveryFee || 0) + addDelivery;
+  localStorage.setItem('dailySummary', JSON.stringify(summary));
+  // clear ช่องหลังบวกแล้ว
+  document.getElementById('f-customers').value = '';
+  document.getElementById('f-delivery').value = '';
+
   // Check for existing item with same name + channel + payment
   const existing = items.find(i => i.name === name && i.price === price && i.channel === channel && i.payment === payment);
   if (existing) {
     existing.qty += qty;
     existing.total = existing.qty * existing.price;
+    existing.deliveryFee = (existing.deliveryFee || 0) + addDelivery;
     toast('รวม "' + name + '" แล้ว ✓');
   } else {
-    const item = { id: Date.now(), name, qty, price, total: qty*price, channel, payment };
+    const item = { id: Date.now(), name, qty, price, total: qty*price, channel, payment, deliveryFee: addDelivery };
     items.push(item);
     toast('เพิ่ม "' + name + '" แล้ว ✓');
   }
@@ -618,7 +625,7 @@ function calcStats() {
 function render() {
   const body = document.getElementById('items-body');
   if (!items.length) {
-    body.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>`;
+    body.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>`;
     updateDashboard(); return;
   }
   body.innerHTML = items.map((it,idx) => {
@@ -630,6 +637,7 @@ function render() {
       <td class="px-3 py-3 text-right" style="color:#7c6b9e;">${fmt(it.price)}</td>
       <td class="px-3 py-3 text-right font-semibold" style="color:#3d2c5e;">${fmt(it.total)}</td>
       <td class="px-3 py-3 text-center"><span class="text-xs px-2 py-1 rounded-full" style="background:#f3e8ff;color:#7c3aed;">${esc(it.payment||'-')}</span></td>
+      <td class="px-3 py-3 text-right text-sm" style="color:#0284c7;">${it.deliveryFee ? fmt(it.deliveryFee)+' ฿' : '-'}</td>
       <td class="px-3 py-3 text-center"><button onclick="removeItem(${it.id})" class="text-xl leading-none font-light" style="color:#d8b4fe;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#d8b4fe'">×</button></td>
     </tr>`;
   }).join('');
@@ -1056,6 +1064,7 @@ function renderMonthly() {
   document.getElementById('m-grab').textContent = fmt(agg.grab)+' ฿';
   document.getElementById('m-lineman').textContent = fmt(agg.lineman)+' ฿';
   document.getElementById('m-shopee').textContent = fmt(agg.shopee)+' ฿';
+  document.getElementById('m-delivery').textContent = fmt(agg.deliveryFee)+' ฿';
   document.getElementById('m-small-qty').textContent = fmt(agg.smallQty||0)+' กล่อง';
 
   // Daily table rows
@@ -1070,6 +1079,7 @@ function renderMonthly() {
       <td style="padding:6px 6px;text-align:right;color:#f97316;">${fmt(r.totalQty)}</td>
       <td style="padding:6px 6px;text-align:right;color:#ec4899;">${fmt(r.smallQty||0)}</td>
       <td style="padding:6px 6px;text-align:right;color:#0284c7;">${fmt(r.customers)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#0284c7;">${fmt(r.deliveryFee||0)}</td>
       <td style="padding:6px 6px;text-align:right;color:#16a34a;">${fmt(r.cashTotal||0)}</td>
       <td style="padding:6px 6px;text-align:right;color:#7c3aed;">${fmt(r.t1Total||0)}</td>
       <td style="padding:6px 6px;text-align:right;color:#7c3aed;">${fmt(r.t2Total||0)}</td>
@@ -1091,6 +1101,7 @@ function renderMonthly() {
     <td style="padding:7px 6px;text-align:right;color:#f97316;">${fmt(agg.qty)}</td>
     <td style="padding:7px 6px;text-align:right;color:#ec4899;">${fmt(agg.smallQty||0)}</td>
     <td style="padding:7px 6px;text-align:right;color:#0284c7;">${fmt(agg.customers)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#0284c7;">${fmt(agg.deliveryFee)}</td>
     <td style="padding:7px 6px;text-align:right;color:#16a34a;">${fmt(agg.cash)}</td>
     <td style="padding:7px 6px;text-align:right;color:#7c3aed;">${fmt(agg.t1)}</td>
     <td style="padding:7px 6px;text-align:right;color:#7c3aed;">${fmt(agg.t2)}</td>
