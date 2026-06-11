@@ -596,7 +596,10 @@ function clearItems() {
   if (!items.length) return;
   if (confirm('ต้องการล้างรายการทั้งหมดใช่ไหม?')) {
     items = [];
+    summary.customers = 0;
+    summary.deliveryFee = 0;
     localStorage.setItem('salesItems', JSON.stringify(items));
+    localStorage.setItem('dailySummary', JSON.stringify(summary));
     render();
     toast('ล้างรายการแล้ว');
   }
