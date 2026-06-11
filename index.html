@@ -38,107 +38,108 @@
 </head>
 <body class="min-h-screen pb-10">
 
-<header class="sticky top-0 z-50" style="background:rgba(255,255,255,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.8);box-shadow:0 2px 20px rgba(180,100,200,0.1);">
-  <div class="max-w-3xl mx-auto px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-    <div>
-      <h1 class="text-lg font-bold tracking-tight" style="color:#5b2d8e;">📒 บันทึกรายการขายรายวัน</h1>
-      <input id="save-date" type="date" style="border-radius:8px;padding:3px 8px;border:1px solid rgba(200,160,255,0.4);background:rgba(255,255,255,0.6);color:#9c6bba;font-size:13px;font-family:inherit;margin-top:2px;" />
+<header class="sticky top-0 z-50" style="background:rgba(255,255,255,0.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(200,160,255,0.25);box-shadow:0 2px 20px rgba(180,100,200,0.08);">
+  <div class="max-w-3xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-between mb-2">
+      <div>
+        <h1 class="text-base font-bold tracking-tight" style="color:#5b2d8e;">📒 บันทึกรายการขายรายวัน</h1>
+        <input id="save-date" type="date" style="border-radius:8px;padding:3px 8px;border:1px solid rgba(200,160,255,0.4);background:rgba(255,255,255,0.6);color:#9c6bba;font-size:12px;font-family:inherit;margin-top:2px;" />
+      </div>
+      <button onclick="saveDailyRecord()" class="text-white text-sm font-bold px-4 py-2.5 rounded-xl" style="background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 3px 12px rgba(245,158,11,0.3);">💾 บันทึกวัน</button>
     </div>
-    <div class="flex gap-2">
-      <button onclick="saveDailyRecord()" class="flex-1 sm:flex-none flex items-center justify-center gap-1 text-white text-sm font-semibold px-3 py-2.5 rounded-xl transition-colors" style="background:linear-gradient(135deg,#f59e0b,#d97706);">💾 บันทึกวัน</button>
-      <button onclick="showMonthly()" class="flex-1 sm:flex-none flex items-center justify-center gap-1 text-white text-sm font-semibold px-3 py-2.5 rounded-xl transition-colors" style="background:linear-gradient(135deg,#06b6d4,#0284c7);">📅 รายเดือน</button>
-      <button onclick="showTopMenus()" class="flex-1 sm:flex-none flex items-center justify-center gap-1 text-white text-sm font-semibold px-3 py-2.5 rounded-xl transition-colors" style="background:linear-gradient(135deg,#f59e0b,#d97706);">🏆 เมนูขายดี</button>
-      <button onclick="exportCSV()" class="flex-1 sm:flex-none flex items-center justify-center gap-1 text-white text-sm font-semibold px-3 py-2.5 rounded-xl transition-colors" style="background:linear-gradient(135deg,#34d399,#059669);">⬇ CSV</button>
-      <button onclick="exportImage('summary')" class="flex-1 sm:flex-none flex items-center justify-center gap-1 text-white text-sm font-semibold px-3 py-2.5 rounded-xl transition-colors" style="background:linear-gradient(135deg,#c084fc,#818cf8);">🖼 สรุป</button>
-      <button onclick="exportImage('full')" class="flex-1 sm:flex-none flex items-center justify-center gap-1 text-white text-sm font-semibold px-3 py-2.5 rounded-xl transition-colors" style="background:linear-gradient(135deg,#f472b6,#c084fc);">📋 รายการ</button>
+    <div class="flex gap-2 flex-wrap">
+      <button onclick="showMonthly()" class="flex-1 text-white text-xs font-semibold px-3 py-2 rounded-xl" style="background:linear-gradient(135deg,#06b6d4,#0284c7);">📅 รายเดือน</button>
+      <button onclick="showTopMenus()" class="flex-1 text-white text-xs font-semibold px-3 py-2 rounded-xl" style="background:linear-gradient(135deg,#f59e0b,#d97706);">🏆 เมนูขายดี</button>
+      <button onclick="exportCSV()" class="flex-1 text-white text-xs font-semibold px-3 py-2 rounded-xl" style="background:linear-gradient(135deg,#34d399,#059669);">⬇ CSV</button>
+      <button onclick="exportImage('summary')" class="flex-1 text-white text-xs font-semibold px-3 py-2 rounded-xl" style="background:linear-gradient(135deg,#c084fc,#818cf8);">🖼 สรุป</button>
+      <button onclick="exportImage('full')" class="flex-1 text-white text-xs font-semibold px-3 py-2 rounded-xl" style="background:linear-gradient(135deg,#f472b6,#c084fc);">📋 รายการ</button>
     </div>
   </div>
 </header>
 
 <div class="max-w-3xl mx-auto px-4 pt-4 space-y-4">
+<!-- hidden elements for JS compat -->
+<span id="d-shop" style="display:none;"></span>
+<span id="d-delivery-fee" style="display:none;"></span>
 
   <!-- DASHBOARD -->
   <section>
+
     <!-- ยอดรวมใหญ่ -->
-    <div class="rounded-2xl p-4 mb-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-      <p class="text-xs mb-1" style="color:#a07cc0;">ยอดขายรวมทั้งหมด</p>
-      <p id="d-total" class="text-3xl font-bold" style="color:#7c3aed;">0 ฿</p>
+    <div class="rounded-2xl px-5 py-4 mb-3" style="background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(192,132,252,0.18));backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.4);">
+      <p class="text-xs font-semibold mb-1" style="color:#9c6bba;letter-spacing:0.05em;">💰 ยอดขายรวมทั้งหมด</p>
+      <p id="d-total" class="text-4xl font-bold" style="color:#7c3aed;">0 ฿</p>
     </div>
 
-    <!-- หน้าร้าน -->
-    <p class="text-xs font-semibold uppercase tracking-wider mb-2 px-1" style="color:#9c6bba;">🏪 หน้าร้าน</p>
-    <div class="grid grid-cols-3 gap-3 mb-2">
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">ยอดหน้าร้าน</p>
-        <p id="d-shop" class="text-lg font-bold" style="color:#2563eb;">0 ฿</p>
+    <!-- กลุ่ม: ภาพรวม -->
+    <p class="text-xs font-bold uppercase tracking-widest mb-2 px-1" style="color:#9c6bba;">📊 ภาพรวม</p>
+    <div class="grid grid-cols-3 gap-2 mb-3">
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
+        <p class="text-xs mb-1" style="color:#a07cc0;">ลูกค้า</p>
+        <p id="d-customers" class="text-xl font-bold" style="color:#0284c7;">0 คน</p>
       </div>
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">เงินสด</p>
-        <p id="d-cash" class="text-lg font-bold" style="color:#16a34a;">0 ฿</p>
-      </div>
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">ค่าส่ง</p>
-        <p id="d-delivery-fee" class="text-lg font-bold" style="color:#0d9488;">0 ฿</p>
-      </div>
-    </div>
-    <div class="grid grid-cols-3 gap-3 mb-3">
-      <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
-        <p class="text-xs mb-1" style="color:#7c3aed;">ป้าดำ</p>
-        <p id="d-t1" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
-      </div>
-      <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
-        <p class="text-xs mb-1" style="color:#7c3aed;">ลุงนัน</p>
-        <p id="d-t2" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
-      </div>
-      <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
-        <p class="text-xs mb-1" style="color:#7c3aed;">ปาล์ม</p>
-        <p id="d-t3" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
-      </div>
-      <div class="rounded-2xl p-3" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
-        <p class="text-xs mb-1" style="color:#7c3aed;">ไทยพลัส</p>
-        <p id="d-t4" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
-      </div>
-    </div>
-
-    <!-- เดลิเวอรี -->
-    <p class="text-xs font-semibold uppercase tracking-wider mb-2 px-1" style="color:#9c6bba;">🛵 เดลิเวอรี (คำนวณจากรายการอัตโนมัติ)</p>
-    <div class="grid grid-cols-3 gap-3 mb-3">
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">Grab</p>
-        <p id="d-grab" class="text-lg font-bold" style="color:#16a34a;">0 ฿</p>
-        <p id="d-grab-qty" class="text-xs mt-1" style="color:#a07cc0;">0 กล่อง</p>
-      </div>
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">LINE MAN</p>
-        <p id="d-lineman" class="text-lg font-bold" style="color:#65a30d;">0 ฿</p>
-        <p id="d-lineman-qty" class="text-xs mt-1" style="color:#a07cc0;">0 กล่อง</p>
-      </div>
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">ShopeeFood</p>
-        <p id="d-shopeefood" class="text-lg font-bold" style="color:#ea580c;">0 ฿</p>
-        <p id="d-shopeefood-qty" class="text-xs mt-1" style="color:#a07cc0;">0 กล่อง</p>
-      </div>
-    </div>
-
-    <!-- รวม -->
-    <div class="grid grid-cols-2 gap-3">
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">จำนวนลูกค้า</p>
-        <p id="d-customers" class="text-xl font-bold" style="color:#3d2c5e;">0 คน</p>
-      </div>
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
         <p class="text-xs mb-1" style="color:#a07cc0;">กล่องใหญ่</p>
         <p id="d-qty" class="text-xl font-bold" style="color:#f97316;">0 กล่อง</p>
       </div>
-      <div class="rounded-2xl p-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-        <p class="text-xs mb-1" style="color:#a07cc0;">กล่องเล็ก (≤50฿)</p>
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(252,231,243,0.8);backdrop-filter:blur(10px);border:1px solid rgba(236,72,153,0.2);">
+        <p class="text-xs mb-1" style="color:#ec4899;">กล่องเล็ก</p>
         <p id="d-small-qty" class="text-xl font-bold" style="color:#ec4899;">0 กล่อง</p>
       </div>
     </div>
+
+    <!-- กลุ่ม: วิธีชำระ -->
+    <p class="text-xs font-bold uppercase tracking-widest mb-2 px-1" style="color:#9c6bba;">💳 วิธีชำระ</p>
+    <div class="grid grid-cols-3 gap-2 mb-1">
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(220,252,231,0.75);backdrop-filter:blur(10px);border:1px solid rgba(22,163,74,0.2);">
+        <p class="text-xs mb-1" style="color:#16a34a;">เงินสด</p>
+        <p id="d-cash" class="text-lg font-bold" style="color:#16a34a;">0 ฿</p>
+      </div>
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
+        <p class="text-xs mb-1" style="color:#7c3aed;">ป้าดำ</p>
+        <p id="d-t1" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
+      </div>
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
+        <p class="text-xs mb-1" style="color:#7c3aed;">ลุงนัน</p>
+        <p id="d-t2" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-2 mb-3">
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(237,220,255,0.65);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.5);">
+        <p class="text-xs mb-1" style="color:#7c3aed;">ปาล์ม</p>
+        <p id="d-t3" class="text-lg font-bold" style="color:#7c3aed;">0 ฿</p>
+      </div>
+      <div class="rounded-2xl p-3 text-center col-span-2" style="background:rgba(237,220,255,0.9);backdrop-filter:blur(10px);border:1px solid rgba(200,160,255,0.6);">
+        <p class="text-xs mb-1" style="color:#7c3aed;">ไทยพลัส</p>
+        <p id="d-t4" class="text-xl font-bold" style="color:#7c3aed;">0 ฿</p>
+      </div>
+    </div>
+
+    <!-- กลุ่ม: เดลิเวอรี -->
+    <p class="text-xs font-bold uppercase tracking-widest mb-2 px-1" style="color:#9c6bba;">🛵 เดลิเวอรี</p>
+    <div class="grid grid-cols-3 gap-2 mb-3">
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(209,250,229,0.75);backdrop-filter:blur(10px);border:1px solid rgba(22,163,74,0.2);">
+        <p class="text-xs mb-1" style="color:#16a34a;">Grab</p>
+        <p id="d-grab" class="text-lg font-bold" style="color:#16a34a;">0 ฿</p>
+        <p id="d-grab-qty" class="text-xs mt-1" style="color:#86efac;">0 กล่อง</p>
+      </div>
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(236,252,203,0.75);backdrop-filter:blur(10px);border:1px solid rgba(101,163,13,0.2);">
+        <p class="text-xs mb-1" style="color:#65a30d;">LINE MAN</p>
+        <p id="d-lineman" class="text-lg font-bold" style="color:#65a30d;">0 ฿</p>
+        <p id="d-lineman-qty" class="text-xs mt-1" style="color:#a3e635;">0 กล่อง</p>
+      </div>
+      <div class="rounded-2xl p-3 text-center" style="background:rgba(255,237,213,0.75);backdrop-filter:blur(10px);border:1px solid rgba(234,88,12,0.2);">
+        <p class="text-xs mb-1" style="color:#ea580c;">ShopeeFood</p>
+        <p id="d-shopeefood" class="text-lg font-bold" style="color:#ea580c;">0 ฿</p>
+        <p id="d-shopeefood-qty" class="text-xs mt-1" style="color:#fb923c;">0 กล่อง</p>
+      </div>
+    </div>
+
   </section>
 
   <!-- QUICK SUMMARY ROW -->
   <section class="rounded-2xl px-4 py-3" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
+    <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#9c6bba;">📝 ข้อมูลประจำวัน</p>
     <div style="display:flex;gap:10px;align-items:flex-end;">
       <div style="flex:1;">
         <label class="text-xs block mb-1" style="color:#a07cc0;">จำนวนลูกค้า (คน)</label>
@@ -161,7 +162,7 @@
 
   <!-- ADD ITEM FORM -->
   <section class="rounded-2xl p-4" style="overflow:visible;position:relative;z-index:100;background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
-    <h2 class="text-sm font-semibold uppercase tracking-wider mb-3" style="color:#7c3aed;">🛒 เพิ่มรายการขาย</h2>
+    <h2 class="text-sm font-bold uppercase tracking-widest mb-3" style="color:#7c3aed;">🛒 เพิ่มรายการขาย</h2>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" style="overflow:visible;position:relative;">
       <div class="col-span-2 sm:col-span-1" style="position:relative;z-index:1000;">
         <label class="text-xs block mb-1" style="color:#a07cc0;">ชื่อสินค้า</label>
@@ -195,13 +196,13 @@
         </select>
       </div>
     </div>
-    <button onclick="addItem()" class="mt-3 w-full text-white font-semibold py-3 rounded-xl transition-colors text-sm" style="background:linear-gradient(135deg,#818cf8,#c084fc);box-shadow:0 4px 15px rgba(129,140,248,0.4);">เพิ่ม +</button>
+    <button onclick="addItem()" class="mt-3 w-full text-white font-bold py-3 rounded-xl transition-colors text-sm" style="background:linear-gradient(135deg,#818cf8,#c084fc);box-shadow:0 4px 15px rgba(129,140,248,0.4);">+ เพิ่มรายการ</button>
   </section>
 
   <!-- TABLE -->
-  <section class="rounded-2xl overflow-hidden" style="position:relative;z-index:1;" style="background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
+  <section class="rounded-2xl overflow-hidden" style="position:relative;z-index:1;background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
     <div class="flex items-center justify-between px-4 py-3" style="border-bottom:1px solid rgba(200,160,255,0.3);">
-      <h2 class="text-sm font-semibold uppercase tracking-wider" style="color:#7c3aed;">📋 รายการทั้งหมด</h2>
+      <h2 class="text-sm font-bold uppercase tracking-widest" style="color:#7c3aed;">📋 รายการทั้งหมด</h2>
       <button onclick="clearItems()" class="text-xs hover:text-red-400 px-3 py-1.5 rounded-lg transition-colors" style="color:#c084fc;">ล้างรายการ</button>
     </div>
     <div class="overflow-x-auto">
@@ -212,12 +213,11 @@
             <th class="text-center px-3 py-2.5 font-semibold" style="color:#a07cc0;">จำนวน</th>
             <th class="text-right px-3 py-2.5 font-semibold" style="color:#a07cc0;">ราคา/ชิ้น</th>
             <th class="text-right px-3 py-2.5 font-semibold" style="color:#a07cc0;">ยอดรวม</th>
-            <th class="text-center px-3 py-2.5 font-semibold hidden sm:table-cell">ช่องทาง</th>
             <th class="text-center px-3 py-2.5 font-semibold" style="color:#a07cc0;">ชำระ</th>
           </tr>
         </thead>
         <tbody id="items-body">
-          <tr><td colspan="6" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>
+          <tr><td colspan="5" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>
         </tbody>
       </table>
     </div>
@@ -389,72 +389,95 @@
       </div>
 
       <!-- Summary cards -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-        <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">ยอดขายรวม</div>
-          <div id="m-total" style="font-size:20px;font-weight:700;color:#7c3aed;">0 ฿</div>
+
+      <!-- กลุ่ม 1: ภาพรวม -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;color:#9c6bba;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;padding-left:2px;">📊 ภาพรวม</div>
+        <div style="display:grid;grid-template-columns:1fr;gap:8px;">
+          <!-- ยอดขายรวม - เต็มแถว -->
+          <div style="background:rgba(237,220,255,0.9);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(200,160,255,0.4);">
+            <div style="font-size:10px;color:#7c3aed;margin-bottom:4px;font-weight:600;">ยอดขายรวม</div>
+            <div id="m-total" style="font-size:24px;font-weight:700;color:#7c3aed;">0 ฿</div>
+          </div>
+          <!-- ลูกค้า + กล่องใหญ่ + กล่องเล็ก - แถวเดียวกัน -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:12px;text-align:center;">
+              <div style="font-size:10px;color:#0284c7;margin-bottom:4px;font-weight:600;">ลูกค้ารวม</div>
+              <div id="m-customers" style="font-size:18px;font-weight:700;color:#0284c7;">0 คน</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:12px;text-align:center;">
+              <div style="font-size:10px;color:#f97316;margin-bottom:4px;font-weight:600;">กล่องใหญ่</div>
+              <div id="m-qty" style="font-size:18px;font-weight:700;color:#f97316;">0</div>
+            </div>
+            <div style="background:rgba(252,231,243,0.7);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(236,72,153,0.15);">
+              <div style="font-size:10px;color:#ec4899;margin-bottom:4px;font-weight:600;">กล่องเล็ก</div>
+              <div id="m-small-qty" style="font-size:18px;font-weight:700;color:#ec4899;">0</div>
+            </div>
+          </div>
         </div>
-        <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">กล่องใหญ่</div>
-          <div id="m-qty" style="font-size:20px;font-weight:700;color:#f97316;">0 กล่อง</div>
+      </div>
+
+      <!-- กลุ่ม 2: วิธีชำระ -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;color:#9c6bba;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;padding-left:2px;">💳 วิธีชำระ</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <div style="background:rgba(220,252,231,0.8);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(22,163,74,0.2);">
+            <div style="font-size:10px;color:#16a34a;margin-bottom:3px;font-weight:600;">เงินสด</div>
+            <div id="m-cash" style="font-size:17px;font-weight:700;color:#16a34a;">0 ฿</div>
+          </div>
+          <div style="background:rgba(237,220,255,0.75);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(200,160,255,0.3);">
+            <div style="font-size:10px;color:#7c3aed;margin-bottom:3px;font-weight:600;">โอนรวม</div>
+            <div id="m-transfer" style="font-size:17px;font-weight:700;color:#7c3aed;">0 ฿</div>
+          </div>
+          <div style="background:rgba(237,220,255,0.75);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(200,160,255,0.3);">
+            <div style="font-size:10px;color:#7c3aed;margin-bottom:3px;font-weight:600;">ไทยพลัส</div>
+            <div id="m-t4" style="font-size:17px;font-weight:700;color:#7c3aed;">0 ฿</div>
+          </div>
         </div>
-        <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">ลูกค้ารวม</div>
-          <div id="m-customers" style="font-size:20px;font-weight:700;color:#0284c7;">0 คน</div>
-        </div>
-        <div style="background:rgba(255,255,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#9c6bba;margin-bottom:4px;">เงินสดรวม</div>
-          <div id="m-cash" style="font-size:18px;font-weight:700;color:#16a34a;">0 ฿</div>
-        </div>
-        <div style="background:rgba(237,220,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#7c3aed;margin-bottom:4px;">โอนรวม</div>
-          <div id="m-transfer" style="font-size:18px;font-weight:700;color:#7c3aed;">0 ฿</div>
-        </div>
-        <div style="background:rgba(237,220,255,0.75);border-radius:14px;padding:14px;text-align:center;">
-          <div style="font-size:11px;color:#7c3aed;margin-bottom:4px;">ไทยพลัส</div>
-          <div id="m-t4" style="font-size:18px;font-weight:700;color:#7c3aed;">0 ฿</div>
-        </div>
-        <div style="background:rgba(209,250,229,0.75);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(22,163,74,0.2);">
-          <div style="font-size:11px;color:#16a34a;margin-bottom:4px;">Grab</div>
-          <div id="m-grab" style="font-size:18px;font-weight:700;color:#16a34a;">0 ฿</div>
-        </div>
-        <div style="background:rgba(236,252,203,0.75);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(101,163,13,0.2);">
-          <div style="font-size:11px;color:#65a30d;margin-bottom:4px;">LINE MAN</div>
-          <div id="m-lineman" style="font-size:18px;font-weight:700;color:#65a30d;">0 ฿</div>
-        </div>
-        <div style="background:rgba(255,237,213,0.75);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(234,88,12,0.2);">
-          <div style="font-size:11px;color:#ea580c;margin-bottom:4px;">ShopeeFood</div>
-          <div id="m-shopee" style="font-size:18px;font-weight:700;color:#ea580c;">0 ฿</div>
-        </div>
-        <div style="background:rgba(252,231,243,0.8);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(236,72,153,0.2);">
-          <div style="font-size:11px;color:#ec4899;margin-bottom:4px;">กล่องเล็ก (≤50฿)</div>
-          <div id="m-small-qty" style="font-size:18px;font-weight:700;color:#ec4899;">0 กล่อง</div>
+      </div>
+
+      <!-- กลุ่ม 3: เดลิเวอรี -->
+      <div style="margin-bottom:14px;">
+        <div style="font-size:10px;font-weight:700;color:#9c6bba;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;padding-left:2px;">🛵 เดลิเวอรี</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <div style="background:rgba(209,250,229,0.75);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(22,163,74,0.2);">
+            <div style="font-size:10px;color:#16a34a;margin-bottom:3px;font-weight:600;">Grab</div>
+            <div id="m-grab" style="font-size:17px;font-weight:700;color:#16a34a;">0 ฿</div>
+          </div>
+          <div style="background:rgba(236,252,203,0.75);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(101,163,13,0.2);">
+            <div style="font-size:10px;color:#65a30d;margin-bottom:3px;font-weight:600;">LINE MAN</div>
+            <div id="m-lineman" style="font-size:17px;font-weight:700;color:#65a30d;">0 ฿</div>
+          </div>
+          <div style="background:rgba(255,237,213,0.75);border-radius:14px;padding:12px;text-align:center;border:1px solid rgba(234,88,12,0.2);">
+            <div style="font-size:10px;color:#ea580c;margin-bottom:3px;font-weight:600;">ShopeeFood</div>
+            <div id="m-shopee" style="font-size:17px;font-weight:700;color:#ea580c;">0 ฿</div>
+          </div>
         </div>
       </div>
 
       <!-- Daily table -->
       <div style="background:rgba(255,255,255,0.75);border-radius:14px;overflow:hidden;">
-        <div style="padding:12px 14px;border-bottom:1px solid rgba(200,160,255,0.3);">
+        <div style="padding:10px 14px;border-bottom:1px solid rgba(200,160,255,0.3);">
           <p style="font-size:12px;font-weight:600;color:#7c3aed;margin:0;text-transform:uppercase;letter-spacing:0.05em;">📋 สรุปรายวัน</p>
         </div>
         <div style="overflow-x:auto;">
-          <table style="width:100%;border-collapse:collapse;font-size:13px;" id="m-daily-table">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:600px;" id="m-daily-table">
             <thead>
               <tr style="background:rgba(237,220,255,0.5);">
-                <th style="padding:8px 12px;text-align:left;color:#7c3aed;font-weight:600;">วันที่</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ยอดรวม</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">กล่องใหญ่</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ลูกค้า</th>
-                <th style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:600;">เงินสด</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ป้าดำ</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ลุงนัน</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ปาล์ม</th>
-                <th style="padding:8px 12px;text-align:right;color:#7c3aed;font-weight:600;">ไทยพลัส</th>
-                <th style="padding:8px 12px;text-align:right;color:#16a34a;font-weight:600;">Grab</th>
-                <th style="padding:8px 12px;text-align:right;color:#65a30d;font-weight:600;">LINE</th>
-                <th style="padding:8px 12px;text-align:right;color:#ea580c;font-weight:600;">Shopee</th>
-                <th style="padding:8px 12px;text-align:right;color:#ec4899;font-weight:600;">กล่องเล็ก</th>
-                <th style="padding:8px 12px;text-align:center;color:#7c3aed;font-weight:600;">ลบ</th>
+                <th style="padding:7px 8px;text-align:left;color:#7c3aed;font-weight:600;white-space:nowrap;">วันที่</th>
+                <th style="padding:7px 8px;text-align:right;color:#7c3aed;font-weight:600;white-space:nowrap;">ยอดรวม</th>
+                <th style="padding:7px 6px;text-align:right;color:#f97316;font-weight:600;white-space:nowrap;">กล่องใหญ่</th>
+                <th style="padding:7px 6px;text-align:right;color:#ec4899;font-weight:600;white-space:nowrap;">กล่องเล็ก</th>
+                <th style="padding:7px 6px;text-align:right;color:#0284c7;font-weight:600;white-space:nowrap;">ลูกค้า</th>
+                <th style="padding:7px 6px;text-align:right;color:#16a34a;font-weight:600;white-space:nowrap;">เงินสด</th>
+                <th style="padding:7px 6px;text-align:right;color:#7c3aed;font-weight:600;white-space:nowrap;">ป้าดำ</th>
+                <th style="padding:7px 6px;text-align:right;color:#7c3aed;font-weight:600;white-space:nowrap;">ลุงนัน</th>
+                <th style="padding:7px 6px;text-align:right;color:#7c3aed;font-weight:600;white-space:nowrap;">ปาล์ม</th>
+                <th style="padding:7px 6px;text-align:right;color:#7c3aed;font-weight:600;white-space:nowrap;">ไทยพลัส</th>
+                <th style="padding:7px 6px;text-align:right;color:#16a34a;font-weight:600;white-space:nowrap;">Grab</th>
+                <th style="padding:7px 6px;text-align:right;color:#65a30d;font-weight:600;white-space:nowrap;">LINE</th>
+                <th style="padding:7px 6px;text-align:right;color:#ea580c;font-weight:600;white-space:nowrap;">Shopee</th>
+                <th style="padding:7px 8px;text-align:center;color:#9c6bba;font-weight:600;white-space:nowrap;">ลบ</th>
               </tr>
             </thead>
             <tbody id="m-daily-body"></tbody>
@@ -595,7 +618,7 @@ function calcStats() {
 function render() {
   const body = document.getElementById('items-body');
   if (!items.length) {
-    body.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>`;
+    body.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-sm" style="color:#c084fc;">🧾 ยังไม่มีรายการ — กรอกข้อมูลด้านบนแล้วกด "เพิ่ม"</td></tr>`;
     updateDashboard(); return;
   }
   body.innerHTML = items.map((it,idx) => {
@@ -606,8 +629,7 @@ function render() {
       <td class="px-3 py-3 text-center" style="color:#7c6b9e;">${it.qty}</td>
       <td class="px-3 py-3 text-right" style="color:#7c6b9e;">${fmt(it.price)}</td>
       <td class="px-3 py-3 text-right font-semibold" style="color:#3d2c5e;">${fmt(it.total)}</td>
-      <td class="px-3 py-3 text-center hidden sm:table-cell"><span class="text-xs px-2 py-1 rounded-full font-medium ${badge}">${esc(it.channel)}</span></td>
-      <td class="px-3 py-3 text-center hidden sm:table-cell"><span class="text-xs px-2 py-1 rounded-full" style="background:#f3e8ff;color:#7c3aed;">${esc(it.payment||'-')}</span></td>
+      <td class="px-3 py-3 text-center"><span class="text-xs px-2 py-1 rounded-full" style="background:#f3e8ff;color:#7c3aed;">${esc(it.payment||'-')}</span></td>
       <td class="px-3 py-3 text-center"><button onclick="removeItem(${it.id})" class="text-xl leading-none font-light" style="color:#d8b4fe;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#d8b4fe'">×</button></td>
     </tr>`;
   }).join('');
@@ -1039,44 +1061,44 @@ function renderMonthly() {
   // Daily table rows
   const tbody = document.getElementById('m-daily-body');
   tbody.innerHTML = records.map((r,idx) => {
-    const bg = idx%2===0?'background:rgba(255,255,255,0.3);':'background:rgba(237,220,255,0.25);';
+    const bg = idx%2===0?'background:rgba(255,255,255,0.3);':'background:rgba(237,220,255,0.2);';
     const d = new Date(r.date);
     const dateStr = `${d.getDate()}/${d.getMonth()+1}`;
-    return `<tr style="${bg}border-top:1px solid rgba(200,160,255,0.25);">
-      <td style="padding:7px 12px;color:#3d2c5e;font-weight:500;">${dateStr}</td>
-      <td style="padding:7px 12px;text-align:right;font-weight:600;color:#7c3aed;">${fmt(r.total)} ฿</td>
-      <td style="padding:7px 12px;text-align:right;color:#f97316;">${fmt(r.totalQty)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#0284c7;">${fmt(r.customers)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.cashTotal||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t1Total||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t2Total||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t3Total||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#7c3aed;">${fmt(r.t4Total||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#16a34a;">${fmt(r.grabTotal||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal||0)}</td>
-      <td style="padding:7px 12px;text-align:right;color:#ec4899;">${fmt(r.smallQty||0)}</td>
-      <td style="padding:7px 12px;text-align:center;">
-        <button onclick="deleteDailyRecord('${r.date}')" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:inherit;">ลบ</button>
+    return `<tr style="${bg}border-top:1px solid rgba(200,160,255,0.2);font-size:11px;">
+      <td style="padding:6px 8px;color:#3d2c5e;font-weight:600;white-space:nowrap;">${dateStr}</td>
+      <td style="padding:6px 8px;text-align:right;font-weight:700;color:#7c3aed;white-space:nowrap;">${fmt(r.total)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#f97316;">${fmt(r.totalQty)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#ec4899;">${fmt(r.smallQty||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#0284c7;">${fmt(r.customers)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#16a34a;">${fmt(r.cashTotal||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#7c3aed;">${fmt(r.t1Total||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#7c3aed;">${fmt(r.t2Total||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#7c3aed;">${fmt(r.t3Total||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#7c3aed;">${fmt(r.t4Total||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#16a34a;">${fmt(r.grabTotal||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#65a30d;">${fmt(r.linemanTotal||0)}</td>
+      <td style="padding:6px 6px;text-align:right;color:#ea580c;">${fmt(r.shopeeTotal||0)}</td>
+      <td style="padding:6px 8px;text-align:center;">
+        <button onclick="deleteDailyRecord('${r.date}')" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#dc2626;border-radius:5px;padding:2px 7px;font-size:10px;cursor:pointer;font-family:inherit;">ลบ</button>
       </td>
     </tr>`;
   }).join('');
 
   // Total row
-  tbody.innerHTML += `<tr style="background:rgba(237,220,255,0.4);font-weight:700;border-top:2px solid rgba(200,160,255,0.4);">
-    <td style="padding:8px 12px;color:#7c3aed;">รวม</td>
-    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.total)} ฿</td>
-    <td style="padding:8px 12px;text-align:right;color:#f97316;">${fmt(agg.qty)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#0284c7;">${fmt(agg.customers)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#16a34a;">${fmt(agg.cash)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t1)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t2)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t3)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#7c3aed;">${fmt(agg.t4)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#16a34a;">${fmt(agg.grab)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#65a30d;">${fmt(agg.lineman)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#ea580c;">${fmt(agg.shopee)}</td>
-    <td style="padding:8px 12px;text-align:right;color:#ec4899;">${fmt(agg.smallQty||0)}</td>
+  tbody.innerHTML += `<tr style="background:rgba(237,220,255,0.5);font-weight:700;border-top:2px solid rgba(200,160,255,0.4);font-size:11px;">
+    <td style="padding:7px 8px;color:#7c3aed;">รวม</td>
+    <td style="padding:7px 8px;text-align:right;color:#7c3aed;">${fmt(agg.total)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#f97316;">${fmt(agg.qty)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#ec4899;">${fmt(agg.smallQty||0)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#0284c7;">${fmt(agg.customers)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#16a34a;">${fmt(agg.cash)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#7c3aed;">${fmt(agg.t1)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#7c3aed;">${fmt(agg.t2)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#7c3aed;">${fmt(agg.t3)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#7c3aed;">${fmt(agg.t4)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#16a34a;">${fmt(agg.grab)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#65a30d;">${fmt(agg.lineman)}</td>
+    <td style="padding:7px 6px;text-align:right;color:#ea580c;">${fmt(agg.shopee)}</td>
     <td></td>
   </tr>`;
 }
