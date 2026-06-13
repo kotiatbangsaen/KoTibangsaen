@@ -180,7 +180,6 @@
       <button onclick="submitOrder()" class="flex-1 text-white font-bold py-2.5 rounded-xl text-sm" style="background:linear-gradient(135deg,#818cf8,#c084fc);box-shadow:0 4px 15px rgba(129,140,248,0.4);">✅ บันทึกออเดอร์นี้</button>
     </div>
     <iframe name="hidden-iframe" style="display:none;"></iframe>
-    <div id="suggestion-box" style="display:none;position:fixed;background:white;border:2px solid rgba(192,132,252,0.6);border-radius:16px;box-shadow:0 8px 32px rgba(192,132,252,0.4);max-height:240px;overflow-y:auto;z-index:99999;min-width:180px;"></div>
   </section>
 
   <!-- TABLE -->
@@ -577,9 +576,13 @@ function showOrderSuggestions(input) {
   const matches = val ? savedProducts.filter(p => p.toLowerCase().includes(val)) : savedProducts.slice(0,10);
   if (!matches.length) { box.style.display='none'; return; }
   const rect = input.getBoundingClientRect();
-  box.style.left = rect.left + 'px';
-  box.style.top = (rect.bottom + window.scrollY + 4) + 'px';
-  box.style.width = rect.width + 'px';
+  const boxW = Math.max(rect.width, 220);
+  const leftPos = Math.min(rect.left, window.innerWidth - boxW - 8);
+  box.style.position = 'fixed';
+  box.style.left = leftPos + 'px';
+  box.style.top = (rect.bottom + 4) + 'px';
+  box.style.width = boxW + 'px';
+  box.style.maxHeight = '220px';
   box.style.display = 'block';
   box.innerHTML = matches.map(p =>
     `<div style="display:flex;align-items:center;border-bottom:1px solid #f3e8ff;">
@@ -1372,5 +1375,6 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function csvEsc(v){v=String(v);return(v.includes(',')||v.includes('"')||v.includes('\n'))?'"'+v.replace(/"/g,'""')+'"':v;}
 
 </script>
+<div id="suggestion-box" style="display:none;position:fixed;background:white;border:2px solid rgba(192,132,252,0.6);border-radius:16px;box-shadow:0 8px 32px rgba(192,132,252,0.4);max-height:220px;overflow-y:auto;z-index:99999;"></div>
 </body>
 </html>
