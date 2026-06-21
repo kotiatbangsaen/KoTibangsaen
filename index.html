@@ -186,7 +186,10 @@
   <section class="rounded-2xl overflow-hidden" style="position:relative;z-index:1;background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
     <div class="flex items-center justify-between px-4 py-3" style="border-bottom:1px solid rgba(200,160,255,0.3);">
       <h2 class="text-sm font-bold uppercase tracking-widest" style="color:#7c3aed;">📋 รายการทั้งหมด</h2>
-      <button onclick="clearItems()" class="text-xs hover:text-red-400 px-3 py-1.5 rounded-lg transition-colors" style="color:#c084fc;">ล้างรายการ</button>
+      <div class="flex gap-2">
+        <button onclick="mergeItems()" class="text-xs px-3 py-1.5 rounded-lg transition-colors" style="color:#9c6bba;background:rgba(200,160,255,0.12);">🔀 รวมซ้ำ</button>
+        <button onclick="clearItems()" class="text-xs hover:text-red-400 px-3 py-1.5 rounded-lg transition-colors" style="color:#c084fc;">ล้างรายการ</button>
+      </div>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
@@ -539,7 +542,7 @@ function paymentSelect(val='เงินสด') {
   </select>`;
 }
 
-function addOrderRow(name='', qty=1, price='', payment='เงินสด') {
+function addOrderRow(name='', qty=1, price='', payment='ไทยพลัส') {
   const id = 'row-' + Date.now() + '-' + Math.random().toString(36).slice(2,6);
   const div = document.createElement('div');
   div.id = id;
@@ -631,6 +634,24 @@ function selectOrderSuggestion(name) {
   hideSuggestions();
 }
 
+function mergeItems() {
+  const merged = [];
+  items.forEach(item => {
+    const existing = merged.find(i => i.name===item.name && i.price===item.price && i.channel===item.channel && i.payment===item.payment);
+    if (existing) {
+      existing.qty += item.qty;
+      existing.total = existing.qty * existing.price;
+      existing.deliveryFee = (existing.deliveryFee||0) + (item.deliveryFee||0);
+    } else {
+      merged.push({...item});
+    }
+  });
+  items = merged;
+  localStorage.setItem('salesItems', JSON.stringify(items));
+  render();
+  toast('รวมรายการซ้ำแล้ว ✓');
+}
+
 function submitOrder() {
   const rows = document.getElementById('order-rows').querySelectorAll('div[id^="row-"]');
   if (!rows.length) { toast('ยังไม่มีรายการ'); return; }
@@ -647,14 +668,7 @@ function submitOrder() {
     if (!name || !price) return;
     const channel = (payment==='Grab')?'Grab':(payment==='LINE MAN')?'LINE MAN':(payment==='ShopeeFood')?'ShopeeFood':'หน้าร้าน';
     const rowDelivery = added === 0 ? addDelivery : 0; // ค่าส่งแนบรายการแรกของออเดอร์
-    const existing = items.find(i => i.name===name && i.price===price && i.channel===channel && i.payment===payment);
-    if (existing) {
-      existing.qty += qty;
-      existing.total = existing.qty * existing.price;
-      existing.deliveryFee = (existing.deliveryFee||0) + rowDelivery;
-    } else {
-      items.push({ id: Date.now()+added, name, qty, price, total: qty*price, channel, payment, deliveryFee: rowDelivery });
-    }
+    items.push({ id: Date.now()+added, name, qty, price, total: qty*price, channel, payment, deliveryFee: rowDelivery });
     if (!savedProducts.includes(name)) { savedProducts.push(name); localStorage.setItem('savedProducts', JSON.stringify(savedProducts)); }
     savedPrices[name] = price;
     localStorage.setItem('savedPrices', JSON.stringify(savedPrices));
