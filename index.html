@@ -146,7 +146,7 @@
   <section class="rounded-2xl p-4" style="overflow:visible;position:relative;z-index:100;background:rgba(255,255,255,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.9);">
     <h2 class="text-sm font-bold uppercase tracking-widest mb-3" style="color:#7c3aed;">🛒 เพิ่มออเดอร์</h2>
 
-    <!-- ระดับออเดอร์: ลูกค้า + ค่าส่ง -->
+    <!-- ระดับออเดอร์: ลูกค้า + ค่าส่ง + วิธีชำระค่าส่ง -->
     <div class="grid grid-cols-2 gap-3 mb-3">
       <div>
         <label class="text-xs block mb-1" style="color:#a07cc0;">ลูกค้า (คน)</label>
@@ -155,10 +155,21 @@
           style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
       </div>
       <div>
-        <label class="text-xs block mb-1" style="color:#a07cc0;">ค่าส่ง (฿)</label>
-        <input id="f-delivery" type="number" inputmode="decimal" placeholder="0" min="0"
-          class="w-full rounded-xl py-2.5 px-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-400"
-          style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
+        <label class="text-xs block mb-1" style="color:#a07cc0;">ค่าส่ง (฿) &amp; วิธีชำระ</label>
+        <div style="display:flex;gap:6px;">
+          <input id="f-delivery" type="number" inputmode="decimal" placeholder="0" min="0"
+            class="rounded-xl py-2.5 px-3 text-base focus:outline-none focus:ring-2 focus:ring-purple-400"
+            style="width:100px;background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;" />
+          <select id="f-delivery-payment" class="flex-1 rounded-xl py-2.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 appearance-none"
+            style="background:rgba(255,255,255,0.8);border:1px solid rgba(200,160,255,0.4);color:#3d2c5e;">
+            <option value="">— ไม่มีค่าส่ง —</option>
+            <option value="เงินสด">เงินสด</option>
+            <option value="ป้าดำ">ป้าดำ</option>
+            <option value="ลุงนัน">ลุงนัน</option>
+            <option value="ปาล์ม">ปาล์ม</option>
+            <option value="ไทยพลัส">ไทยพลัส</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -214,147 +225,126 @@
 </div>
 
 <!-- SNAPSHOT CARD -->
-<div id="snapshot-card" style="position:fixed;left:-9999px;top:0;width:680px;padding:20px;background:linear-gradient(135deg,#1e3a5f 0%,#2e75b6 100%);font-family:-apple-system,BlinkMacSystemFont,'Noto Sans Thai',sans-serif;">
-  <div style="text-align:center;margin-bottom:10px;">
-    <div style="font-size:20px;margin-bottom:2px;">📒</div>
-    <div style="font-size:16px;font-weight:700;color:#fff;">สรุปยอดขายประจำวัน</div>
-    <div id="snap-date" style="font-size:11px;color:#bdd7ee;margin-top:2px;"></div>
+<div id="snapshot-card" style="position:fixed;left:-9999px;top:0;width:680px;padding:24px;background:linear-gradient(135deg,#1e3a5f 0%,#2d1b6b 100%);font-family:-apple-system,BlinkMacSystemFont,'Noto Sans Thai',sans-serif;">
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:14px;">
+    <div style="font-size:13px;font-weight:700;color:#e2d9f3;letter-spacing:0.05em;">📒 สรุปยอดขายประจำวัน</div>
+    <div id="snap-date" style="font-size:11px;color:#a89cc8;margin-top:3px;"></div>
   </div>
-  <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:7px;text-align:center;margin-bottom:10px;">
-    <div style="font-size:10px;color:#bdd7ee;margin-bottom:2px;">ยอดขายรวมทั้งหมด</div>
-    <div id="snap-total" style="font-size:28px;font-weight:800;color:#fff;">0 ฿</div>
+
+  <!-- ยอดรวม -->
+  <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <div style="font-size:11px;color:#bdd7ee;font-weight:600;">ยอดขายรวมทั้งหมด</div>
+    <div id="snap-total" style="font-size:26px;font-weight:800;color:#fff;">0 ฿</div>
   </div>
-  <div style="font-size:10px;font-weight:600;color:#bdd7ee;margin-bottom:5px;text-transform:uppercase;">🏪 หน้าร้าน</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:5px;">
-    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:9px;color:#bdd7ee;margin-bottom:2px;">ยอดหน้าร้าน</div>
-      <div id="snap-shop" style="font-size:14px;font-weight:700;color:#93c5fd;">0 ฿</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">เงินสด</div>
-      <div id="snap-cash" style="font-size:14px;font-weight:700;color:#6ee7b7;">0 ฿</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ค่าส่ง</div>
-      <div id="snap-delfee" style="font-size:14px;font-weight:700;color:#5eead4;">0 ฿</div>
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:10px;">
-    <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ป้าดำ</div>
-      <div id="snap-t1" style="font-size:13px;font-weight:700;color:#c5a3ff;">0 ฿</div>
-    </div>
-    <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ลุงนัน</div>
-      <div id="snap-t2" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
-    </div>
-    <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ปาล์ม</div>
-      <div id="snap-t3" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
-    </div>
-    <div style="background:rgba(180,130,255,0.25);border-radius:10px;padding:10px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ไทยพลัส</div>
-      <div id="snap-t4" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
-    </div>
-  </div>
-    <div style="font-size:10px;font-weight:600;color:#bdd7ee;margin-bottom:5px;text-transform:uppercase;">🛵 เดลิเวอรี</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:10px;">
-    <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:7px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">Grab</div>
-      <div id="snap-grab" style="font-size:15px;font-weight:700;color:#86efac;">0 ฿</div>
-      <div id="snap-grab-qty" style="font-size:10px;color:#bdd7ee;margin-top:2px;">0 กล่อง</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">LINE MAN</div>
-      <div id="snap-lineman" style="font-size:15px;font-weight:700;color:#bef264;">0 ฿</div>
-      <div id="snap-lineman-qty" style="font-size:10px;color:#bdd7ee;margin-top:2px;">0 กล่อง</div>
-    </div>
-    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">ShopeeFood</div>
-      <div id="snap-shopeefood" style="font-size:15px;font-weight:700;color:#fdba74;">0 ฿</div>
-      <div id="snap-shopeefood-qty" style="font-size:10px;color:#bdd7ee;margin-top:2px;">0 กล่อง</div>
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px;">
-    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">จำนวนลูกค้า</div>
+
+  <!-- ภาพรวม -->
+  <div style="font-size:9px;font-weight:700;color:#a89cc8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">📊 ภาพรวม</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;">
+    <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#a89cc8;margin-bottom:3px;">ลูกค้า</div>
       <div id="snap-customers" style="font-size:15px;font-weight:700;color:#fff;">0 คน</div>
     </div>
-    <div style="background:rgba(255,255,255,0.1);border-radius:10px;padding:12px;text-align:center;">
-      <div style="font-size:10px;color:#bdd7ee;margin-bottom:3px;">กล่องใหญ่</div>
-      <div id="snap-qty" style="font-size:15px;font-weight:700;color:#fbbf24;">0 กล่อง</div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#a89cc8;margin-bottom:3px;">กล่องใหญ่</div>
+      <div id="snap-qty" style="font-size:15px;font-weight:700;color:#fbbf24;">0</div>
     </div>
-    <div style="background:rgba(252,231,243,0.2);border-radius:10px;padding:12px;text-align:center;">
-      <div style="font-size:10px;color:#f9a8d4;margin-bottom:3px;">กล่องเล็ก (≤50฿)</div>
-      <div id="snap-small-qty" style="font-size:15px;font-weight:700;color:#f9a8d4;">0 กล่อง</div>
+    <div style="background:rgba(252,231,243,0.12);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#f9a8d4;margin-bottom:3px;">กล่องเล็ก</div>
+      <div id="snap-small-qty" style="font-size:15px;font-weight:700;color:#f9a8d4;">0</div>
     </div>
   </div>
-  <div id="snap-items-wrapper" style="background:rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;margin-bottom:14px;">
-    <div style="display:grid;grid-template-columns:1fr 55px 70px 80px 80px;background:rgba(0,0,0,0.2);padding:10px 14px;">
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;">เมนู</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">กล่อง</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ราคา/ชิ้น</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ยอดรวม</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">ช่องทาง</div>
+
+  <!-- วิธีชำระ -->
+  <div style="font-size:9px;font-weight:700;color:#a89cc8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">💳 วิธีชำระ</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px;">
+    <div style="background:rgba(110,231,183,0.15);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#6ee7b7;margin-bottom:3px;">เงินสด</div>
+      <div id="snap-cash" style="font-size:14px;font-weight:700;color:#6ee7b7;">0 ฿</div>
+    </div>
+    <div style="background:rgba(180,130,255,0.2);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#c5a3ff;margin-bottom:3px;">ป้าดำ</div>
+      <div id="snap-t1" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
+    </div>
+    <div style="background:rgba(180,130,255,0.2);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#c5a3ff;margin-bottom:3px;">ลุงนัน</div>
+      <div id="snap-t2" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;">
+    <div style="background:rgba(180,130,255,0.2);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#c5a3ff;margin-bottom:3px;">ปาล์ม</div>
+      <div id="snap-t3" style="font-size:14px;font-weight:700;color:#c5a3ff;">0 ฿</div>
+    </div>
+    <div style="background:rgba(180,130,255,0.2);border-radius:10px;padding:10px;text-align:center;grid-column:span 2;">
+      <div style="font-size:9px;color:#c5a3ff;margin-bottom:3px;">ไทยพลัส</div>
+      <div id="snap-t4" style="font-size:15px;font-weight:700;color:#c5a3ff;">0 ฿</div>
+    </div>
+  </div>
+
+  <!-- เดลิเวอรี -->
+  <div style="font-size:9px;font-weight:700;color:#a89cc8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">🛵 เดลิเวอรี</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px;">
+    <div style="background:rgba(134,239,172,0.15);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#86efac;margin-bottom:2px;">Grab</div>
+      <div id="snap-grab" style="font-size:14px;font-weight:700;color:#86efac;">0 ฿</div>
+      <div id="snap-grab-qty" style="font-size:9px;color:#a89cc8;margin-top:2px;">0 กล่อง</div>
+    </div>
+    <div style="background:rgba(190,242,100,0.12);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#bef264;margin-bottom:2px;">LINE MAN</div>
+      <div id="snap-lineman" style="font-size:14px;font-weight:700;color:#bef264;">0 ฿</div>
+      <div id="snap-lineman-qty" style="font-size:9px;color:#a89cc8;margin-top:2px;">0 กล่อง</div>
+    </div>
+    <div style="background:rgba(253,186,116,0.15);border-radius:10px;padding:10px;text-align:center;">
+      <div style="font-size:9px;color:#fdba74;margin-bottom:2px;">Shopee</div>
+      <div id="snap-shopeefood" style="font-size:14px;font-weight:700;color:#fdba74;">0 ฿</div>
+      <div id="snap-shopeefood-qty" style="font-size:9px;color:#a89cc8;margin-top:2px;">0 กล่อง</div>
+    </div>
+  </div>
+  <div style="background:rgba(94,234,212,0.12);border-radius:10px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <div style="font-size:9px;color:#5eead4;font-weight:600;">ค่าส่งรวม</div>
+    <div id="snap-delfee" style="font-size:15px;font-weight:700;color:#5eead4;">0 ฿</div>
+  </div>
+
+  <!-- รายการ -->
+  <div id="snap-items-wrapper" style="background:rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;margin-bottom:12px;">
+    <div style="display:grid;grid-template-columns:1fr 50px 65px 75px 80px;background:rgba(0,0,0,0.25);padding:8px 12px;">
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;">เมนู</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:center;">กล่อง</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:right;">ราคา/ชิ้น</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:right;">ยอดรวม</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:center;">ชำระ</div>
     </div>
     <div id="snap-items"></div>
   </div>
-  <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.4);">บันทึกรายการขายรายวัน</div>
+  <div style="text-align:center;font-size:10px;color:rgba(255,255,255,0.3);">บันทึกรายการขายรายวัน</div>
 </div>
 
 <!-- ITEMS ONLY SNAPSHOT -->
-<div id="snapshot-items-card" style="display:none;position:fixed;left:-9999px;top:0;width:680px;padding:20px;background:linear-gradient(135deg,#1e3a5f 0%,#2e75b6 100%);font-family:-apple-system,BlinkMacSystemFont,'Noto Sans Thai',sans-serif;">
+<div id="snapshot-items-card" style="position:fixed;left:-9999px;top:0;width:680px;padding:24px;background:linear-gradient(135deg,#1e3a5f 0%,#2d1b6b 100%);font-family:-apple-system,BlinkMacSystemFont,'Noto Sans Thai',sans-serif;">
   <div style="text-align:center;margin-bottom:14px;">
-    <div style="font-size:16px;font-weight:700;color:#fff;">📋 รายการขายประจำวัน</div>
-    <div id="snap-items-date" style="font-size:11px;color:#bdd7ee;margin-top:2px;"></div>
+    <div style="font-size:14px;font-weight:700;color:#e2d9f3;">📋 รายการขายประจำวัน</div>
+    <div id="snap-items-date" style="font-size:11px;color:#a89cc8;margin-top:3px;"></div>
   </div>
-  <div style="background:rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
-    <div style="display:grid;grid-template-columns:1fr 55px 70px 80px 80px;background:rgba(0,0,0,0.2);padding:10px 14px;">
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;">เมนู</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">กล่อง</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ราคา/ชิ้น</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ยอดรวม</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">ช่องทาง</div>
+  <div style="background:rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;">
+    <div id="snap-items-only-header" style="display:grid;grid-template-columns:1fr 50px 65px 75px 80px;background:rgba(0,0,0,0.25);padding:8px 12px;">
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;">เมนู</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:center;">กล่อง</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:right;">ราคา/ชิ้น</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:right;">ยอดรวม</div>
+      <div style="font-size:10px;font-weight:600;color:#bdd7ee;text-align:center;">ชำระ</div>
     </div>
     <div id="snap-items-only-body"></div>
-    <div style="display:grid;grid-template-columns:1fr 55px 70px 80px 80px;padding:10px 14px;background:rgba(0,0,0,0.2);border-top:1px solid rgba(255,255,255,0.1);">
-      <div style="font-size:12px;font-weight:700;color:#fff;">รวม</div>
-      <div id="snap-items-total-qty" style="font-size:12px;font-weight:700;color:#fbbf24;text-align:center;"></div>
+    <div style="display:grid;grid-template-columns:1fr 50px 65px 75px 80px;padding:8px 12px;background:rgba(0,0,0,0.2);border-top:1px solid rgba(255,255,255,0.1);">
+      <div style="font-size:11px;font-weight:700;color:#fff;">รวม</div>
+      <div id="snap-items-total-qty" style="font-size:11px;font-weight:700;color:#fbbf24;text-align:center;"></div>
       <div></div>
-      <div id="snap-items-total-thb" style="font-size:12px;font-weight:700;color:#fbbf24;text-align:right;"></div>
+      <div id="snap-items-total-thb" style="font-size:11px;font-weight:700;color:#fbbf24;text-align:right;"></div>
       <div></div>
     </div>
   </div>
-  <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;">บันทึกรายการขายรายวัน</div>
+  <div style="text-align:center;font-size:10px;color:rgba(255,255,255,0.3);margin-top:10px;">บันทึกรายการขายรายวัน</div>
 </div>
-
-<!-- ITEMS ONLY SNAPSHOT -->
-<div id="snapshot-items-card" style="position:fixed;left:-9999px;top:0;width:680px;padding:20px;background:linear-gradient(135deg,#1e3a5f 0%,#2e75b6 100%);font-family:-apple-system,BlinkMacSystemFont,'Noto Sans Thai',sans-serif;">
-  <div style="text-align:center;margin-bottom:14px;">
-    <div style="font-size:16px;font-weight:700;color:#fff;">📋 รายการขายประจำวัน</div>
-    <div id="snap-items-date" style="font-size:11px;color:#bdd7ee;margin-top:2px;"></div>
-  </div>
-  <div style="background:rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;">
-    <div id="snap-items-only-header" style="display:grid;grid-template-columns:1fr 55px 70px 80px 80px;background:rgba(0,0,0,0.2);padding:10px 14px;">
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;">เมนู</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">กล่อง</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ราคา/ชิ้น</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:right;">ยอดรวม</div>
-      <div style="font-size:11px;font-weight:600;color:#bdd7ee;text-align:center;">ช่องทาง</div>
-    </div>
-    <div id="snap-items-only-body"></div>
-    <!-- Total row -->
-    <div style="display:grid;grid-template-columns:1fr 55px 70px 80px 80px;padding:10px 14px;background:rgba(0,0,0,0.2);border-top:1px solid rgba(255,255,255,0.1);">
-      <div style="font-size:12px;font-weight:700;color:#fff;">รวม</div>
-      <div id="snap-items-total-qty" style="font-size:12px;font-weight:700;color:#fbbf24;text-align:center;"></div>
-      <div></div>
-      <div id="snap-items-total-thb" style="font-size:12px;font-weight:700;color:#fbbf24;text-align:right;"></div>
-      <div></div>
-    </div>
-  </div>
-  <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;">บันทึกรายการขายรายวัน</div>
-</div>
-
 
 <!-- MONTHLY MODAL -->
 <div id="monthly-modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.5);overflow-y:auto;">
@@ -512,8 +502,13 @@ const _pad = n => String(n).padStart(2,'0');
 const todayVal = `${_today.getFullYear()}-${_pad(_today.getMonth()+1)}-${_pad(_today.getDate())}`;
 let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),2200);}
-let summary = JSON.parse(localStorage.getItem('dailySummary') || '{"t1":0,"t2":0,"t3":0,"t4":0,"cash":0,"customers":0,"deliveryFee":0}');
+let summary = JSON.parse(localStorage.getItem('dailySummary') || '{"t1":0,"t2":0,"t3":0,"t4":0,"cash":0,"customers":0,"deliveryFee":0,"delCash":0,"delT1":0,"delT2":0,"delT3":0,"delT4":0}');
 if (typeof summary.t4 === 'undefined') summary.t4 = 0;
+if (typeof summary.delCash === 'undefined') summary.delCash = 0;
+if (typeof summary.delT1 === 'undefined') summary.delT1 = 0;
+if (typeof summary.delT2 === 'undefined') summary.delT2 = 0;
+if (typeof summary.delT3 === 'undefined') summary.delT3 = 0;
+if (typeof summary.delT4 === 'undefined') summary.delT4 = 0;
 let savedProducts = JSON.parse(localStorage.getItem('savedProducts') || '[]');
 let savedPrices = JSON.parse(localStorage.getItem('savedPrices') || '{}');
 
@@ -658,6 +653,7 @@ function submitOrder() {
 
   const addCustomers = parseInt(document.getElementById('f-customers').value) || 0;
   const addDelivery = parseFloat(document.getElementById('f-delivery').value) || 0;
+  const deliveryPayment = document.getElementById('f-delivery-payment').value;
 
   let added = 0;
   rows.forEach(row => {
@@ -678,7 +674,15 @@ function submitOrder() {
   if (!added) { toast('กรุณากรอกชื่อสินค้าและราคา'); return; }
 
   if (addCustomers > 0) summary.customers = (summary.customers||0) + addCustomers;
-  if (addDelivery > 0) summary.deliveryFee = (summary.deliveryFee||0) + addDelivery;
+  if (addDelivery > 0) {
+    summary.deliveryFee = (summary.deliveryFee||0) + addDelivery;
+    // รวมค่าส่งในยอดวิธีชำระที่เลือก
+    if (deliveryPayment === 'เงินสด') summary.delCash = (summary.delCash||0) + addDelivery;
+    else if (deliveryPayment === 'ป้าดำ') summary.delT1 = (summary.delT1||0) + addDelivery;
+    else if (deliveryPayment === 'ลุงนัน') summary.delT2 = (summary.delT2||0) + addDelivery;
+    else if (deliveryPayment === 'ปาล์ม') summary.delT3 = (summary.delT3||0) + addDelivery;
+    else if (deliveryPayment === 'ไทยพลัส') summary.delT4 = (summary.delT4||0) + addDelivery;
+  }
   localStorage.setItem('dailySummary', JSON.stringify(summary));
   localStorage.setItem('salesItems', JSON.stringify(items));
 
@@ -687,6 +691,7 @@ function submitOrder() {
   addOrderRow();
   document.getElementById('f-customers').value = '1';
   document.getElementById('f-delivery').value = '';
+  document.getElementById('f-delivery-payment').value = '';
   refreshDatalist();
   render();
   toast(`บันทึก ${added} รายการ ✓`);
@@ -714,6 +719,11 @@ function clearItems() {
     items = [];
     summary.customers = 0;
     summary.deliveryFee = 0;
+    summary.delCash = 0;
+    summary.delT1 = 0;
+    summary.delT2 = 0;
+    summary.delT3 = 0;
+    summary.delT4 = 0;
     localStorage.setItem('salesItems', JSON.stringify(items));
     localStorage.setItem('dailySummary', JSON.stringify(summary));
     render();
@@ -731,11 +741,11 @@ function calcStats() {
   const shopeeQty    = items.filter(i=>i.payment==='ShopeeFood').reduce((s,i)=>s+i.qty,0);
   const totalQty     = items.filter(i=>i.price>=50).reduce((s,i)=>s+i.qty,0);
   const smallQty     = items.filter(i=>i.price<50).reduce((s,i)=>s+i.qty,0);
-  const cashTotal    = items.filter(i=>i.payment==='เงินสด').reduce((s,i)=>s+i.total,0);
-  const t1Total      = items.filter(i=>i.payment==='ป้าดำ'||i.payment==='โอนป้าดำ').reduce((s,i)=>s+i.total,0);
-  const t2Total      = items.filter(i=>i.payment==='ลุงนัน'||i.payment==='โอนลุงนัน').reduce((s,i)=>s+i.total,0);
-  const t3Total      = items.filter(i=>i.payment==='ปาล์ม'||i.payment==='โอนปาล์ม').reduce((s,i)=>s+i.total,0);
-  const t4Total      = items.filter(i=>i.payment==='ไทยพลัส').reduce((s,i)=>s+i.total,0);
+  const cashTotal    = items.filter(i=>i.payment==='เงินสด').reduce((s,i)=>s+i.total,0) + (summary.delCash||0);
+  const t1Total      = items.filter(i=>i.payment==='ป้าดำ'||i.payment==='โอนป้าดำ').reduce((s,i)=>s+i.total,0) + (summary.delT1||0);
+  const t2Total      = items.filter(i=>i.payment==='ลุงนัน'||i.payment==='โอนลุงนัน').reduce((s,i)=>s+i.total,0) + (summary.delT2||0);
+  const t3Total      = items.filter(i=>i.payment==='ปาล์ม'||i.payment==='โอนปาล์ม').reduce((s,i)=>s+i.total,0) + (summary.delT3||0);
+  const t4Total      = items.filter(i=>i.payment==='ไทยพลัส').reduce((s,i)=>s+i.total,0) + (summary.delT4||0);
   const transferTotal = t1Total + t2Total + t3Total + t4Total;
   const grandTotal   = shopTotal + grabTotal + linemanTotal + shopeeTotal + summary.deliveryFee;
   return { shopTotal, grabTotal, linemanTotal, shopeeTotal, grabQty, linemanQty, shopeeQty, totalQty, smallQty, cashTotal, t1Total, t2Total, t3Total, t4Total, transferTotal, grandTotal };
@@ -803,7 +813,7 @@ function exportImage(mode='summary') {
   const d = new Date();
   document.getElementById('snap-date').textContent = d.toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   document.getElementById('snap-total').textContent        = fmt(s.grandTotal)+' ฿';
-  document.getElementById('snap-shop').textContent         = fmt(s.shopTotal)+' ฿';
+  document.getElementById('snap-shop') && (document.getElementById('snap-shop').textContent = fmt(s.shopTotal)+' ฿');
   document.getElementById('snap-t1').textContent            = fmt(s.t1Total)+' ฿';
   document.getElementById('snap-t2').textContent            = fmt(s.t2Total)+' ฿';
   document.getElementById('snap-t3').textContent            = fmt(s.t3Total)+' ฿';
