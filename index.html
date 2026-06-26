@@ -848,7 +848,7 @@ function exportImage(mode='summary') {
         <div style="font-size:13px;color:#e2e8f0;text-align:center;">${it.qty}</div>
         <div style="font-size:13px;color:#cbd5e1;text-align:right;">${fmt(it.price)} ฿</div>
         <div style="font-size:14px;font-weight:700;color:#fbbf24;text-align:right;">${fmt(it.total)} ฿</div>
-        <div style="font-size:10px;color:#bdd7ee;text-align:center;">${esc(it.channel)}</div>
+        <div style="font-size:10px;color:#bdd7ee;text-align:center;">${esc(it.payment||it.channel)}</div>
       </div>`).join('');
     const totalQty = items.reduce((s,i)=>s+i.qty,0);
     const totalThb = items.reduce((s,i)=>s+i.total,0);
